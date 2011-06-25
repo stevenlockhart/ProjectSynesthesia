@@ -3,7 +3,6 @@
  *
  * Frame Buffer
  * 
- * TODO: Description
  */
 
 #ifndef FRAME_BUFFER_H
@@ -26,6 +25,7 @@ struct fb_data {
   unsigned int head;
   unsigned int tail;
 };
+
 typedef struct fb_data *fb_t;
 
 /*

@@ -12,13 +12,13 @@
 
 #include "frame_buffer.h"
 
-struct spec_data {
+typedef struct {
   // TEMP
   double lo;
   double md;
   double hi;
-};
-typedef struct spec_data *spec_t;
+} spectrum;
+//typedef struct spectrum *spectrum_t;
 
 /*
  * Calculate Spectrum
@@ -29,6 +29,7 @@ typedef struct spec_data *spec_t;
  * Returns the number of frames analyzed on success or a negative error code on
  * failure.
  */
-int calculate_spectrum(fb_t buf, spec_t spec);
+int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
+                       spectrum *spec);
 
 #endif

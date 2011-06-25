@@ -8,20 +8,17 @@
 
 #include "fft.h"
 
-int calculate_spectrum(fb_t buf, spec_t spec) {
-  // Prepare input array for FFTW by converting buf to doubles
-  double *fftw_in = fb_todoubles(buf);
-  
-  // Prepare output arrays for FFTW
-  // TEMP
-  unsigned int out_size = (buf->num_elements / 2) + 1;
-  printf("FFTW out_size = %d\n", out_size);
-  fftw_complex *fftw_out = 
-      (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * out_size);
-                                  // * ((buf->num_elements / 2) + 1));
+int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
+                       spectrum *spec) {
+
+  fftw_complex *out = (fftw_complex *)fftw_malloc(sizeof(fftw_complex)
+                                                  * ((n_frames / 2) + 1));
+  // Convert frame_buffer to double[]
+  double *in;
+  in = fb_todoubles(frame_buffer);
 
   // Create FFTW plan
-  fftw_plan plan = fftw_plan_dft_r2c_1d(buf->num_elements, fftw_in, fftw_out,
+  fftw_plan plan = fftw_plan_dft_r2c_1d(fb_num_elements(frame_buffer), in, out,
                                         FFTW_ESTIMATE);
 
   // Compute DFT
@@ -33,16 +30,13 @@ int calculate_spectrum(fb_t buf, spec_t spec) {
   double amp;
   unsigned int n;
   spec->lo = 0; spec->md = 0; spec->hi = 0;
-  for (n = 0; n < buf->num_elements; n++) {
-    freq = (double)buf->num_elements / (n + 1);
-    
-    // TODO: Fix this fucking line
-    //amp = (double)*(*(fftw_complex *)fftw_out[n]); // Yikes
+  for (n = 0; n < frame_buffer->num_elements; n++) {
+    freq = (double)frame_buffer->num_elements / (n + 1);
+    amp = (double)*(*(fftw_complex *)out[n]); // Yikes
     // TEMP
     //if (amp > 0) printf("Histogram Bar: {%8f, %8f}\n", freq, amp);
     
     // Build spectrum ranges
-    // TODO: Move this.
     if (amp > 0) {
       if (freq < 1000) {
         spec->lo += amp;
