@@ -13,8 +13,8 @@
 //#include "capture_main.h"
 
 typedef struct {
-  uint16_t l;
-  uint16_t r;
+  int16_t l;
+  int16_t r;
 } frame;
 
 struct fb_data {

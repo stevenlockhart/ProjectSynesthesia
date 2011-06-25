@@ -24,17 +24,22 @@
 int capture_callback(snd_pcm_t *pcm_handle,
                      unsigned int available_frames,
                      fb_t frame_buffer) {
-  // TODO
+  frame buf[available_frames];
+  snd_pcm_readi(pcm_handle, &buf, available_frames);
 
-  // Try to available_frames frames from the pcm device to the frame_buffer
-  int n;
-  for (n = 0; n < available_frames; n++) {
-    frame f;
-    snd_pcm_readi(pcm_handle, &f, 1);
-    fb_enqueue(frame_buffer, f);
+  printf("First frame = {%d, %d}\n", buf[0].l, buf[0].r);
+
+  // TODO: Try to get available_frames frames from the pcm device to the
+  // frame_buffer
+ 
+  int f;
+  for (f = 0; f < available_frames; f++) {
+    //frame f;
+    //snd_pcm_readi(pcm_handle, &f, 1);
+    fb_enqueue(frame_buffer, buf[f]);
   }
 
-  return n;
+  return 0;
 }
 
 /*
@@ -46,7 +51,7 @@ int capture_callback(snd_pcm_t *pcm_handle,
  * Returns the number of frames analyzed or -1 in the event of an error.
  */
 int calculate_spectrum(fb_t frame_buffer,
-                       spectrum_buffer_t spectrum_buffer) {
+                       spectrum_t spectrum) {
   // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
   // contents of the frame_buffer.  Enqueue this spectrum into the
   // frequency_buffer.
@@ -144,7 +149,7 @@ int main(int argc, char **argv) {
   }
   snd_pcm_hw_params_free(hw_params);
 
-  /* Configure this ALSA session to interrupt whenever 4096 or more frames of
+  /* Configure this ALSA session to interrupt whenever PACKET_SIZE or more frames of
    * captured audio is available to be processed */
 
   // Allocate software parameters
@@ -161,8 +166,8 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Set available frames minimum (4096)
-  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, 4096))
+  // Set available frames minimum (PACKET_SIZE)
+  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, PACKET_SIZE))
       < 0) {
     fprintf(stderr, "Cannot set minimum available frames: 4096 (%s)\n",
             snd_strerror(err));
@@ -192,11 +197,16 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  // Start PCM device
+  if ((err = snd_pcm_start(pcm_handle)) < 0) {
+    fprintf(stderr, "Cannot start stream (%s)\n", snd_strerror(err));
+    exit(1);
+  }
+
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
   spectrum_buffer_t spectrum_buffer = NULL;
   colors_t colors = NULL;
-  // TODO
 
   /* Mainloop */
   while (1) {
@@ -204,10 +214,10 @@ int main(int argc, char **argv) {
     int frames_buffered;
 
     // TEMP: Use a shorter time than one second (needs tuning)
-    /*if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
+    if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
       fprintf(stderr, "Poll failed (%s)\n", snd_strerror(err));
       break;
-    }*/
+    }
 
     // Find out how many frames the interface has available
     if ((frames_available = snd_pcm_avail_update(pcm_handle)) < 0) {
@@ -217,30 +227,31 @@ int main(int argc, char **argv) {
       } else {
         fprintf(stderr, "unknown snd_pcm_avail_update valued returned (%d)\n",
                 frames_available);
-        break;
+        //break;
       }
     }
-    printf("frames_available = %d\n", frames_available);
+    if (frames_available > 0) printf("frames_available = %d\n",
+                                     frames_available);
 
     // Capture the available frames
     if ((frames_buffered = capture_callback(pcm_handle, frames_available,
                                             frame_buffer))
         != PACKET_SIZE) {
-      fprintf(stderr, "Capture callback failed\n");
-      break;
+      //fprintf(stderr, "Capture callback failed\n");
+      //break;
     }
 
     // Calculate spectrum
     if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
         fb_num_elements(frame_buffer)) {
-      fprintf(stderr, "Calculate spectrum failed\n");
-      break;
+      //fprintf(stderr, "Calculate spectrum failed\n");
+      //break;
     }
 
     // Calculate color values
-    if (update_colors(spectrum_buffer, colors) != NUM_LEDS) {
-      fprintf(stderr, "Update colors failed\n");
-      break;
+    if (update_colors(spectrum, colors) != NUM_LEDS) {
+      //fprintf(stderr, "Update colors failed\n");
+      //break;
     }
   }
  

@@ -13,7 +13,7 @@ colors.o : colors.c
 	gcc -Wall -g -c -o colors.o colors.c
 
 frame_buffer.o : frame_buffer.c
-	gcc -Wall -g -c -o frame_buffer.o frame_buffer.c
+	gcc -Wall -g -lasound -c -o frame_buffer.o frame_buffer.c
 
 spectrum.o : spectrum.c
 	gcc -Wall -g -c -o spectrum.o spectrum.c
@@ -23,5 +23,6 @@ clean :
 	rm -f caching_queue.o
 	rm -f capture_main.o
 	rm -f colors.o
+	rm -f frame_buffer.o
 	rm -f spectrum.o
 
