@@ -11,7 +11,7 @@
  */
 
 #define NUM_LEDS 60
-#define PACKET_SIZE 4096
+#define PACKET_SIZE 20480
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,7 +35,7 @@ int capture_callback(snd_pcm_t *pcm_handle,
   frame buf[available_frames];
   snd_pcm_readi(pcm_handle, &buf, available_frames);
 
-  printf("First frame = {%d, %d}\n", buf[0].l, buf[0].r);
+  // printf("First frame = {%d, %d}\n", buf[0].l, buf[0].r);
 
   // TODO: Try to get available_frames frames from the pcm device to the
   // frame_buffer
@@ -58,7 +58,7 @@ int capture_callback(snd_pcm_t *pcm_handle,
  *
  * Returns the number of LEDs updated or -1 in the event of an error.
  */
-int update_colors(spectrum_t spectrum,
+int update_colors(spectrum *spectrum,
                   colors_t colors) {
   // TODO
   return 0;
@@ -195,7 +195,8 @@ int main(int argc, char **argv) {
 
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
-  spectrum_t spectrum = NULL;
+  spectrum *spec = (spectrum *)malloc(sizeof(spectrum));
+  spec->lo = 0; spec->md = 0; spec->hi = 0;
   colors_t colors = NULL;
 
   /* Mainloop */
@@ -220,8 +221,8 @@ int main(int argc, char **argv) {
         //break;
       }
     }
-    if (frames_available > 0) printf("frames_available = %d\n",
-                                     frames_available);
+    /*if (frames_available > 0) printf("frames_available = %d\n",
+                                     frames_available);*/
 
     // Capture the available frames
     if ((frames_buffered = capture_callback(pcm_handle, frames_available,
@@ -232,17 +233,18 @@ int main(int argc, char **argv) {
     }
 
     // Calculate spectrum
-    if (calculate_spectrum(frame_buffer, spectrum) !=
+    if (calculate_spectrum(fb_num_elements(frame_buffer), frame_buffer,
+                           spec) !=
         fb_num_elements(frame_buffer)) {
-      //fprintf(stderr, "Calculate spectrum failed\n");
-      //break;
+      fprintf(stderr, "Calculate spectrum failed\n");
+      break;
     }
 
     // Calculate color values
-    if (update_colors(spectrum, colors) != NUM_LEDS) {
+    //if (update_colors(spec, colors) != NUM_LEDS) {
       //fprintf(stderr, "Update colors failed\n");
       //break;
-    }
+    //}
   }
  
   snd_pcm_close(pcm_handle);
