@@ -1,0 +1,23 @@
+Project Synesthesia lets you experience the unspoken relationship between color
+and sound.  Send your audio into the fixture and watch what you’re hearing
+light the room. Project Synesthesia is a visualizer for your space, not your
+screen, and its programmed by anything it hears.
+
+Project Synesthesia has two parts, the LED Array and the Controller. 
+
+The LED Array
+The LED Array is comprised of strips of individually addressable RGB LEDs.
+The LED Array can display any combination of colors in its light.  The LEDs in
+the LED Array will be the brightest possible LEDs so as to adequately light a
+room.  The LEDs will be networked in serial in a way that the color pattern of
+the LED Array in whole will refresh at greater than 30 Hz.
+
+The Controller
+The LED Array will be controlled by a controlling embedded system.  The
+Controller will receive an analog stereo audio stream and perform analog to
+digital conversion.  Software in the embedded system will direct the LED
+Array’s light display by mapping intensity and color to qualities of the audio
+stream such as its short term trends in intensity and its frequency spectrum.
+The Controller will run on a small Linux environment on a small ARM board that
+must be fast enough for digital signal processing and also have an analog
+stereo audio input and a tolerable analog to digital converter.
