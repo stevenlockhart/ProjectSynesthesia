@@ -12,6 +12,8 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
+#include <assert.h>
 
 struct caching_queue_data {
   void **elements;

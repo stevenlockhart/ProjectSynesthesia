@@ -179,7 +179,7 @@ int main(int argc, char **argv) {
   }
 
   /* Set up internal data structures */
-  frame_buffer_t frame_buffer = NULL;
+  frame_buffer_t frame_buffer = create(PACKET_SIZE);
   spectrum_buffer_t spectrum_buffer = NULL;
   color_array_t led_array = NULL;
   // TODO
