@@ -6,7 +6,7 @@
 
 #include "caching_queue.h"
 
-caching_queue_t create(unsigned int max_size) {
+caching_queue_t caching_queue_create(unsigned int max_size) {
   caching_queue_t q =
     (caching_queue_t)malloc(sizeof(struct caching_queue_data));
   if (!q) return NULL;

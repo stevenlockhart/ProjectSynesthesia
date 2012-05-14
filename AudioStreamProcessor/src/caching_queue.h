@@ -11,9 +11,9 @@
  * cache.  
  */
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <assert.h>
 
 struct caching_queue_data {
   void **elements;
@@ -29,7 +29,7 @@ typedef void* queue_element_t;
 /*
  * Creates a new caching queue with the passed maximum size and returns it.
  */
-caching_queue_t create(unsigned int max_size);
+caching_queue_t caching_queue_create(unsigned int max_size);
 
 /*
  * Adds a new element at the tail of the queue.  If the queue is already at its
