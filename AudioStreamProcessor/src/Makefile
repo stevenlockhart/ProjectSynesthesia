@@ -3,6 +3,9 @@ all : audio_stream_processor
 audio_stream_processor : caching_queue.o colors.o spectrum.o capture_main.c
 	gcc -Wall -g -lasound caching_queue.o colors.o spectrum.o -o ../bin/audio_stream_processor capture_main.c
 
+test : caching_queue.o caching_queue_test.c
+	gcc -Wall -g caching_queue.o -o ../bin/caching_queue_test caching_queue_test.c
+
 caching_queue.o : caching_queue.c
 	gcc -Wall -g -c -o caching_queue.o caching_queue.c
 

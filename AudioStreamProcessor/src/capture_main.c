@@ -179,7 +179,7 @@ int main(int argc, char **argv) {
   }
 
   /* Set up internal data structures */
-  frame_buffer_t frame_buffer = NULL;
+  frame_buffer_t frame_buffer = cq_create(PACKET_SIZE);
   spectrum_buffer_t spectrum_buffer = NULL;
   color_array_t led_array = NULL;
   // TODO
@@ -217,7 +217,7 @@ int main(int argc, char **argv) {
 
     // Calculate spectrum
     if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
-        caching_queue_num_elements(frame_buffer)) {
+        cq_num_elements(frame_buffer)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
