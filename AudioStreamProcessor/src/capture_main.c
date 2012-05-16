@@ -21,10 +21,20 @@
  *
  * Returns the number of frames buffered or -1 in the event of an error.
  */
-int capture_callback(unsigned int available_frames,
-                     frame_buffer_t frame_buffer) {
+int capture_callback(snd_pcm_t *pcm_handle,
+                     unsigned int available_frames,
+                     fb_t frame_buffer) {
   // TODO
-  return 0;
+
+  // Try to available_frames frames from the pcm device to the frame_buffer
+  int n;
+  for (n = 0; n < available_frames; n++) {
+    frame f;
+    snd_pcm_readi(pcm_handle, &f, 1);
+    fb_enqueue(frame_buffer, f);
+  }
+
+  return n;
 }
 
 /*
@@ -35,9 +45,13 @@ int capture_callback(unsigned int available_frames,
  *
  * Returns the number of frames analyzed or -1 in the event of an error.
  */
-int calculate_spectrum(frame_buffer_t frame_buffer,
+int calculate_spectrum(fb_t frame_buffer,
                        spectrum_buffer_t spectrum_buffer) {
+  // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
+  // contents of the frame_buffer.  Enqueue this spectrum into the
+  // frequency_buffer.
   // TODO
+
   return 0;
 }
 
@@ -51,6 +65,14 @@ int calculate_spectrum(frame_buffer_t frame_buffer,
  */
 int update_colors(spectrum_buffer_t spectrum_buffer,
                   color_array_t led_array) {
+  
+  // Average the frequency spectrum to get the intensity of the sample
+  // TODO
+
+  // Build color weights based on frequency spectrum
+  // TODO
+
+  // Calculate final colors
   // TODO
   return 0;
 }
@@ -62,7 +84,7 @@ int main(int argc, char **argv) {
   /* Set up ALSA Stream */
   int err;
   snd_pcm_t *pcm_handle;
-  char *pcm_name = strdup("plughw:0,0"); // TEMP: Hardcoded
+  char *pcm_name = strdup("hw:0,0"); // TEMP: Hardcoded
   snd_pcm_hw_params_t *hw_params;
   snd_pcm_sw_params_t *sw_params;
 
@@ -179,7 +201,7 @@ int main(int argc, char **argv) {
   }
 
   /* Set up internal data structures */
-  frame_buffer_t frame_buffer = cq_create(PACKET_SIZE);
+  fb_t frame_buffer = fb_create(PACKET_SIZE);
   spectrum_buffer_t spectrum_buffer = NULL;
   color_array_t led_array = NULL;
   // TODO
@@ -188,13 +210,12 @@ int main(int argc, char **argv) {
   while (1) {
     int frames_available;
     int frames_buffered;
-    
-    // Wait until the interface has enough data, or one second has elapsed
+
     // TEMP: Use a shorter time than one second (needs tuning)
-    if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
+    /*if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
       fprintf(stderr, "Poll failed (%s)\n", snd_strerror(err));
       break;
-    }
+    }*/
 
     // Find out how many frames the interface has available
     if ((frames_available = snd_pcm_avail_update(pcm_handle)) < 0) {
@@ -207,9 +228,11 @@ int main(int argc, char **argv) {
         break;
       }
     }
+    printf("frames_available = %d\n", frames_available);
 
     // Capture the available frames
-    if ((frames_buffered = capture_callback(frames_available, frame_buffer))
+    if ((frames_buffered = capture_callback(pcm_handle, frames_available,
+                                            frame_buffer))
         != PACKET_SIZE) {
       fprintf(stderr, "Capture callback failed\n");
       break;
@@ -217,7 +240,7 @@ int main(int argc, char **argv) {
 
     // Calculate spectrum
     if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
-        cq_num_elements(frame_buffer)) {
+        fb_num_elements(frame_buffer)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
