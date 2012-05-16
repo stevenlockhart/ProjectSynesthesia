@@ -23,7 +23,7 @@
  */
 int capture_callback(snd_pcm_t *pcm_handle,
                      unsigned int available_frames,
-                     frame_buf_t frame_buf) {
+                     fb_t frame_buffer) {
   // TODO
 
   // Try to available_frames frames from the pcm device to the frame_buffer
@@ -31,7 +31,7 @@ int capture_callback(snd_pcm_t *pcm_handle,
   for (n = 0; n < available_frames; n++) {
     frame f;
     snd_pcm_readi(pcm_handle, &f, 1);
-    fb_enqueue(frame_buf, f);
+    fb_enqueue(frame_buffer, f);
   }
 
   return n;
@@ -45,7 +45,7 @@ int capture_callback(snd_pcm_t *pcm_handle,
  *
  * Returns the number of frames analyzed or -1 in the event of an error.
  */
-int calculate_spectrum(frame_buf_t frame_buf,
+int calculate_spectrum(fb_t frame_buffer,
                        //spectrum_buffer_t spectrum_buffer
                        spectrum_t spectrum) {
   // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
@@ -202,7 +202,7 @@ int main(int argc, char **argv) {
   }
 
   /* Set up internal data structures */
-  frame_buf_t frame_buf = fb_create(PACKET_SIZE);
+  fb_t frame_buffer = fb_create(PACKET_SIZE);
   spectrum_t spectrum = NULL;
   colors_t colors = NULL;
   // TODO
@@ -233,15 +233,15 @@ int main(int argc, char **argv) {
 
     // Capture the available frames
     if ((frames_buffered = capture_callback(pcm_handle, frames_available,
-                                            frame_buf))
+                                            frame_buffer))
         != PACKET_SIZE) {
       fprintf(stderr, "Capture callback failed\n");
       break;
     }
 
     // Calculate spectrum
-    if (calculate_spectrum(frame_buf, spectrum) !=
-        fb_num_elements(frame_buf)) {
+    if (calculate_spectrum(frame_buffer, spectrum) !=
+        fb_num_elements(frame_buffer)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
