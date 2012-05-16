@@ -46,7 +46,6 @@ int capture_callback(snd_pcm_t *pcm_handle,
  * Returns the number of frames analyzed or -1 in the event of an error.
  */
 int calculate_spectrum(fb_t frame_buffer,
-                       //spectrum_buffer_t spectrum_buffer
                        spectrum_t spectrum) {
   // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
   // contents of the frame_buffer.  Enqueue this spectrum into the
@@ -205,7 +204,6 @@ int main(int argc, char **argv) {
   fb_t frame_buffer = fb_create(PACKET_SIZE);
   spectrum_t spectrum = NULL;
   colors_t colors = NULL;
-  // TODO
 
   /* Mainloop */
   while (1) {
