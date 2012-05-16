@@ -35,6 +35,13 @@ typedef struct {
   uint16_t r;
 } frame;*/
 
+typedef struct {
+  // TODO
+  // TEMP:
+  int a;
+} spectrum;
+typedef struct spectrum *spectrum_t;
+
 typedef struct caching_queue_data *frame_buffer_t;
-typedef struct caching_queue_data *spectrum_buffer_t;
+//typedef struct caching_queue_data *spectrum_buffer_t;
 typedef struct color_array *color_array_t;

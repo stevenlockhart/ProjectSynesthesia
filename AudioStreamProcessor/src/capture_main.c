@@ -23,7 +23,7 @@
  */
 int capture_callback(snd_pcm_t *pcm_handle,
                      unsigned int available_frames,
-                     fb_t frame_buffer) {
+                     frame_buf_t frame_buf) {
   // TODO
 
   // Try to available_frames frames from the pcm device to the frame_buffer
@@ -31,7 +31,7 @@ int capture_callback(snd_pcm_t *pcm_handle,
   for (n = 0; n < available_frames; n++) {
     frame f;
     snd_pcm_readi(pcm_handle, &f, 1);
-    fb_enqueue(frame_buffer, f);
+    fb_enqueue(frame_buf, f);
   }
 
   return n;
@@ -45,8 +45,9 @@ int capture_callback(snd_pcm_t *pcm_handle,
  *
  * Returns the number of frames analyzed or -1 in the event of an error.
  */
-int calculate_spectrum(fb_t frame_buffer,
-                       spectrum_buffer_t spectrum_buffer) {
+int calculate_spectrum(frame_buf_t frame_buf,
+                       //spectrum_buffer_t spectrum_buffer
+                       spectrum_t spectrum) {
   // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
   // contents of the frame_buffer.  Enqueue this spectrum into the
   // frequency_buffer.
@@ -63,8 +64,8 @@ int calculate_spectrum(fb_t frame_buffer,
  *
  * Returns the number of LEDs updated or -1 in the event of an error.
  */
-int update_colors(spectrum_buffer_t spectrum_buffer,
-                  color_array_t led_array) {
+int update_colors(spectrum_t spectrum,
+                  colors_t colors) {
   
   // Average the frequency spectrum to get the intensity of the sample
   // TODO
@@ -201,9 +202,9 @@ int main(int argc, char **argv) {
   }
 
   /* Set up internal data structures */
-  fb_t frame_buffer = fb_create(PACKET_SIZE);
-  spectrum_buffer_t spectrum_buffer = NULL;
-  color_array_t led_array = NULL;
+  frame_buf_t frame_buf = fb_create(PACKET_SIZE);
+  spectrum_t spectrum = NULL;
+  colors_t colors = NULL;
   // TODO
 
   /* Mainloop */
@@ -232,21 +233,21 @@ int main(int argc, char **argv) {
 
     // Capture the available frames
     if ((frames_buffered = capture_callback(pcm_handle, frames_available,
-                                            frame_buffer))
+                                            frame_buf))
         != PACKET_SIZE) {
       fprintf(stderr, "Capture callback failed\n");
       break;
     }
 
     // Calculate spectrum
-    if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
-        fb_num_elements(frame_buffer)) {
+    if (calculate_spectrum(frame_buf, spectrum) !=
+        fb_num_elements(frame_buf)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
 
     // Calculate color values
-    if (update_colors(spectrum_buffer, led_array) != NUM_LEDS) {
+    if (update_colors(spectrum, colors) != NUM_LEDS) {
       fprintf(stderr, "Update colors failed\n");
       break;
     }
