@@ -1,3 +1,8 @@
+/*
+ * DE1 Top Level
+ *
+ * Ian Finder
+ */
 module system_DE1 (LEDR, LEDG, HEX0, HEX1, HEX2, HEX3, UART_TXD, UART_RXD, KEY, SW, CLOCK_50, GPIO_0, CLOCK_24
 );
 
