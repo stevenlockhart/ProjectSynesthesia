@@ -14,8 +14,9 @@
 
 #include <stdint.h>
 
-#include "caching_queue.h"
+//#include "caching_queue.h"
 #include "colors.h"
+#include "frame_buffer.h"
 #include "spectrum.h"
 
 typedef struct {
@@ -29,11 +30,20 @@ typedef struct {
   color colors[NUM_LEDS];
 } color_array;
 
-typedef struct {
+/*typedef struct {
   uint16_t l;
   uint16_t r;
-} frame;
+} frame;*/
+
+<<<<<<< HEAD
+/*typedef struct {
+  // TODO
+  // TEMP:
+  int a;
+} spectrum;
+typedef struct spectrum *spectrum_t;*/
 
 typedef struct caching_queue_data *frame_buffer_t;
 typedef struct caching_queue_data *spectrum_buffer_t;
-typedef struct color_array *color_array_t;
+typedef struct caching_queue_data *frame_buffer_t;
+typedef struct color_array *colors_t;
