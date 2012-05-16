@@ -46,7 +46,12 @@ int capture_callback(snd_pcm_t *pcm_handle,
  * Returns the number of frames analyzed or -1 in the event of an error.
  */
 int calculate_spectrum(fb_t frame_buffer,
+<<<<<<< HEAD
                        spectrum_buffer_t spectrum_buffer) {
+=======
+                       //spectrum_buffer_t spectrum_buffer
+                       spectrum_t spectrum) {
+>>>>>>> 95b450f57d4c17f89e4535b702665d5738148d66
   // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
   // contents of the frame_buffer.  Enqueue this spectrum into the
   // frequency_buffer.
@@ -63,9 +68,22 @@ int calculate_spectrum(fb_t frame_buffer,
  *
  * Returns the number of LEDs updated or -1 in the event of an error.
  */
+<<<<<<< HEAD
 int update_colors(spectrum_buffer_t spectrum_buffer,
                   colors_t colors) {
   
+=======
+int update_colors(spectrum_t spectrum,
+                  colors_t colors) {
+  
+  // Average the frequency spectrum to get the intensity of the sample
+  // TODO
+
+  // Build color weights based on frequency spectrum
+  // TODO
+
+  // Calculate final colors
+>>>>>>> 95b450f57d4c17f89e4535b702665d5738148d66
   // TODO
   return 0;
 }
@@ -195,7 +213,11 @@ int main(int argc, char **argv) {
 
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
+<<<<<<< HEAD
   spectrum_buffer_t spectrum_buffer = NULL;
+=======
+  spectrum_t spectrum = NULL;
+>>>>>>> 95b450f57d4c17f89e4535b702665d5738148d66
   colors_t colors = NULL;
   // TODO
 
@@ -232,14 +254,22 @@ int main(int argc, char **argv) {
     }
 
     // Calculate spectrum
+<<<<<<< HEAD
     if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
+=======
+    if (calculate_spectrum(frame_buffer, spectrum) !=
+>>>>>>> 95b450f57d4c17f89e4535b702665d5738148d66
         fb_num_elements(frame_buffer)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
 
     // Calculate color values
+<<<<<<< HEAD
     if (update_colors(spectrum_buffer, colors) != NUM_LEDS) {
+=======
+    if (update_colors(spectrum, colors) != NUM_LEDS) {
+>>>>>>> 95b450f57d4c17f89e4535b702665d5738148d66
       fprintf(stderr, "Update colors failed\n");
       break;
     }
