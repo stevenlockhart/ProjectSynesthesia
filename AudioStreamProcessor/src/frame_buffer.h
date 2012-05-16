@@ -1,65 +1,67 @@
 /*
  * Steven Lockhart
  *
- * Caching Queue
+ * Frame Buffer
  * 
- * A data structure that combines elements of queues and least-recently-used
- * caches.  The queue has a maximum size analagous to the cache-size.  If the
- * queue is full, an enqueue also results in a dequeue.  This way, when the
- * buffer is at its maximum size, the oldest elements in the queue are removed
- * from the queue to make room for new elements, like in a least-recently-used
- * cache.  
  */
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 
-struct cq_data {
-  void **elements;
+//#include "capture_main.h"
+
+typedef struct {
+  uint16_t l;
+  uint16_t r;
+} frame;
+
+struct fb_data {
+  frame *elements;
   unsigned int num_elements;
   unsigned int max_num_elements;
   unsigned int head;
   unsigned int tail;
 };
 
-typedef struct cq_data *cq_t;
-typedef void* q_element_t;
+typedef struct fb_data *fb_t;
+//typedef void* q_element_t;
 
 /*
  * Creates a new caching queue with the passed maximum size and returns it.
  */
-cq_t cq_create(unsigned int max_size);
+fb_t fb_create(unsigned int max_size);
 
 /*
  * Adds a new element at the tail of the queue.  If the queue is already at its
  * maximum size, one element is dequeued from the head of the queue.  The
  * dequeued element is returned.  If no element was dequeued, NULL is returned.
  */
-q_element_t cq_enqueue(cq_t q, q_element_t e);
+frame fb_enqueue(fb_t b, frame f);
 
 /*
  * Removes an element from the head of the queue and returns it.  If the queue
  * is empty, NULL is returned.
  */
-q_element_t cq_dequeue(cq_t q);
+frame fb_dequeue(fb_t b);
 
 /*
  * Returns whether or not there are any elements in the queue.
  */
-bool cq_is_empty(cq_t q);
+bool fb_is_empty(fb_t b);
 
 /*
  * Returns whether or not the queue is at its maximum size.
  */
-bool cq_is_full(cq_t q);
+bool fb_is_full(fb_t b);
 
 /*
  * Returns the number of elements in the queue.
  */
-unsigned int cq_num_elements(cq_t q);
+unsigned int fb_num_elements(fb_t b);
 
 /*
  * Returns the maximum size of the queue.
  */
-unsigned int cq_size(cq_t);
+unsigned int fb_size(fb_t b);
