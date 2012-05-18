@@ -9,9 +9,6 @@
  * spectrum to determine what colors to assign the LEDs in the LED Array.
  */
 
-#define NUM_LEDS 60
-#define PACKET_SIZE 4096
-
 #include <stdint.h>
 
 //#include "caching_queue.h"

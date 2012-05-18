@@ -27,15 +27,17 @@ int capture_callback(snd_pcm_t *pcm_handle,
   frame buf[available_frames];
   snd_pcm_readi(pcm_handle, &buf, available_frames);
 
+  printf("First frame = {%d, %d}\n", buf[0].l, buf[0].r);
+
   // TODO: Try to get available_frames frames from the pcm device to the
   // frame_buffer
-  /*
-  int n;
-  for (n = 0; n < available_frames; n++) {
-    frame f;
-    snd_pcm_readi(pcm_handle, &f, 1);
-    fb_enqueue(frame_buffer, f);
-  }*/
+ 
+  int f;
+  for (f = 0; f < available_frames; f++) {
+    //frame f;
+    //snd_pcm_readi(pcm_handle, &f, 1);
+    fb_enqueue(frame_buffer, buf[f]);
+  }
 
   return 0;
 }
@@ -155,7 +157,7 @@ int main(int argc, char **argv) {
   }
   snd_pcm_hw_params_free(hw_params);
 
-  /* Configure this ALSA session to interrupt whenever 4096 or more frames of
+  /* Configure this ALSA session to interrupt whenever PACKET_SIZE or more frames of
    * captured audio is available to be processed */
 
   // Allocate software parameters
@@ -172,8 +174,8 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Set available frames minimum (4096)
-  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, 4096))
+  // Set available frames minimum (PACKET_SIZE)
+  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, PACKET_SIZE))
       < 0) {
     fprintf(stderr, "Cannot set minimum available frames: 4096 (%s)\n",
             snd_strerror(err));
