@@ -24,17 +24,20 @@
 int capture_callback(snd_pcm_t *pcm_handle,
                      unsigned int available_frames,
                      fb_t frame_buffer) {
-  // TODO
+  frame buf[available_frames];
+  snd_pcm_readi(pcm_handle, &buf, available_frames);
 
-  // Try to available_frames frames from the pcm device to the frame_buffer
+  // TODO: Try to get available_frames frames from the pcm device to the
+  // frame_buffer
+  /*
   int n;
   for (n = 0; n < available_frames; n++) {
     frame f;
     snd_pcm_readi(pcm_handle, &f, 1);
     fb_enqueue(frame_buffer, f);
-  }
+  }*/
 
-  return n;
+  return 0;
 }
 
 /*
@@ -200,6 +203,12 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  // Start PCM device
+  if ((err = snd_pcm_start(pcm_handle)) < 0) {
+    fprintf(stderr, "Cannot start stream (%s)\n", snd_strerror(err));
+    exit(1);
+  }
+
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
   spectrum_t spectrum = NULL;
@@ -211,10 +220,10 @@ int main(int argc, char **argv) {
     int frames_buffered;
 
     // TEMP: Use a shorter time than one second (needs tuning)
-    /*if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
+    if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
       fprintf(stderr, "Poll failed (%s)\n", snd_strerror(err));
       break;
-    }*/
+    }
 
     // Find out how many frames the interface has available
     if ((frames_available = snd_pcm_avail_update(pcm_handle)) < 0) {
@@ -224,30 +233,31 @@ int main(int argc, char **argv) {
       } else {
         fprintf(stderr, "unknown snd_pcm_avail_update valued returned (%d)\n",
                 frames_available);
-        break;
+        //break;
       }
     }
-    printf("frames_available = %d\n", frames_available);
+    if (frames_available > 0) printf("frames_available = %d\n",
+                                     frames_available);
 
     // Capture the available frames
     if ((frames_buffered = capture_callback(pcm_handle, frames_available,
                                             frame_buffer))
         != PACKET_SIZE) {
-      fprintf(stderr, "Capture callback failed\n");
-      break;
+      //fprintf(stderr, "Capture callback failed\n");
+      //break;
     }
 
     // Calculate spectrum
     if (calculate_spectrum(frame_buffer, spectrum) !=
         fb_num_elements(frame_buffer)) {
-      fprintf(stderr, "Calculate spectrum failed\n");
-      break;
+      //fprintf(stderr, "Calculate spectrum failed\n");
+      //break;
     }
 
     // Calculate color values
     if (update_colors(spectrum, colors) != NUM_LEDS) {
-      fprintf(stderr, "Update colors failed\n");
-      break;
+      //fprintf(stderr, "Update colors failed\n");
+      //break;
     }
   }
  
