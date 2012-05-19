@@ -68,7 +68,7 @@ int calculate_spectrum(fb_t frame_buffer,
  *
  * Returns the number of LEDs updated or -1 in the event of an error.
  */
-int update_colors(spectrum_buffer_t spectrum_buffer,
+int update_colors(spectrum_t spectrum,
                   colors_t colors) {
   // TODO
   return 0;
@@ -205,7 +205,7 @@ int main(int argc, char **argv) {
 
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
-  spectrum_buffer_t spectrum_buffer = NULL;
+  spectrum_t spectrum = NULL;
   colors_t colors = NULL;
 
   /* Mainloop */
@@ -242,7 +242,7 @@ int main(int argc, char **argv) {
     }
 
     // Calculate spectrum
-    if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
+    if (calculate_spectrum(frame_buffer, spectrum) !=
         fb_num_elements(frame_buffer)) {
       //fprintf(stderr, "Calculate spectrum failed\n");
       //break;
