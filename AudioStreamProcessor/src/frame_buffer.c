@@ -4,11 +4,6 @@
  * Frame Buffer
  */
 
-/*typedef struct {
-  uint16_t l;
-  uint16_t r;
-} frame;*/
-
 #include "frame_buffer.h"
 
 fb_t fb_create(unsigned int max_size) {

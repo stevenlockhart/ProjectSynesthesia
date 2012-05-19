@@ -2,6 +2,12 @@
  * Steven Lockhart
  *
  * AudioStreamProcessor
+ *
+ * Interrupt-based audio stream capturer and analyzer.  Buffers the audio
+ * stream from line-in on the audio card using the ALSA audio system.  
+ * Calculates the frequency spectrum of the buffered sample.  Uses the
+ * frequency spectrum to determine what colors to assign to the LEDs in the LED
+ * Array
  */
 
 #define NUM_LEDS 60
@@ -11,15 +17,17 @@
 #include <stdlib.h>
 #include <alsa/asoundlib.h>
 
-#include "capture_main.h"
+#include "colors.h"
+#include "fft.h"
+#include "frame_buffer.h"
 
-/*
+/* 
  * Capture Callback
  *
- * Captures up to PACKET_SIZE and at least available_frames frames from the
- * audio interface and enqueues them into the frame buffer.
+ * Captures up to PACKET_SIZE frames or at least all available_frames from the
+ * PCM capture stream and enqueues them into the frame buffer.
  *
- * Returns the number of frames buffered or -1 in the event of an error.
+ * Returns the number of frames buffered or a negative error code.
  */
 int capture_callback(snd_pcm_t *pcm_handle,
                      unsigned int available_frames,
@@ -38,24 +46,6 @@ int capture_callback(snd_pcm_t *pcm_handle,
     //snd_pcm_readi(pcm_handle, &f, 1);
     fb_enqueue(frame_buffer, buf[f]);
   }
-
-  return 0;
-}
-
-/*
- * Calculate Spectrum
- *
- * Calculates the frequency spectrum of the frames in the frame buffer and
- * enqueues the frequency spectrum into the spectrum buffer.
- *
- * Returns the number of frames analyzed or -1 in the event of an error.
- */
-int calculate_spectrum(fb_t frame_buffer,
-                       spectrum_t spectrum) {
-  // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
-  // contents of the frame_buffer.  Enqueue this spectrum into the
-  // frequency_buffer.
-  // TODO
 
   return 0;
 }

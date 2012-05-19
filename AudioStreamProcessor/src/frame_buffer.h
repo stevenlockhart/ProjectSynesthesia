@@ -10,8 +10,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-//#include "capture_main.h"
-
 typedef struct {
   int16_t l;
   int16_t r;
@@ -26,7 +24,6 @@ struct fb_data {
 };
 
 typedef struct fb_data *fb_t;
-//typedef void* q_element_t;
 
 /*
  * Creates a new caching queue with the passed maximum size and returns it.
