@@ -27,4 +27,4 @@ typedef struct {
 } color_array;
 typedef struct color_array *colors_t;
 
-int calculate_colors(spectrum *spec, colors_t colors);
+int calculate_colors(spectrum *spec, color_array *c);

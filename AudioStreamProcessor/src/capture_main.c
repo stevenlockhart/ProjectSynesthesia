@@ -51,20 +51,6 @@ int capture_callback(snd_pcm_t *pcm_handle,
 }
 
 /*
- * Update Colors
- *
- * Uses the trends in the frequency spectrum in the spectrum buffer to update
- * color of the LEDs in the LED Array.
- *
- * Returns the number of LEDs updated or -1 in the event of an error.
- */
-int update_colors(spectrum *spectrum,
-                  colors_t colors) {
-  // TODO
-  return 0;
-}
-
-/*
  * Main
  */
 int main(int argc, char **argv) {
@@ -196,9 +182,12 @@ int main(int argc, char **argv) {
 
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
+
   spectrum *spec = (spectrum *)malloc(sizeof(spectrum));
   spec->lo = 0; spec->md = 0; spec->hi = 0;
-  colors_t colors = NULL;
+
+  color_array *c = (color_array *)malloc(sizeof(color_array));
+  memset(c, 0, sizeof(c));
 
   /* Mainloop */
   while (1) {
@@ -242,10 +231,10 @@ int main(int argc, char **argv) {
     }
 
     // Calculate color values
-    //if (update_colors(spec, colors) != NUM_LEDS) {
-      //fprintf(stderr, "Update colors failed\n");
-      //break;
-    //}
+    if (calculate_colors(spec, c) != NUM_LEDS) {
+      fprintf(stderr, "Update colors failed\n");
+      break;
+    }
   }
  
   snd_pcm_close(pcm_handle);
