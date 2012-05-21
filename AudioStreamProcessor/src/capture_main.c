@@ -2,70 +2,51 @@
  * Steven Lockhart
  *
  * AudioStreamProcessor
+ *
+ * Interrupt-based audio stream capturer and analyzer.  Buffers the audio
+ * stream from line-in on the audio card using the ALSA audio system.  
+ * Calculates the frequency spectrum of the buffered sample.  Uses the
+ * frequency spectrum to determine what colors to assign to the LEDs in the LED
+ * Array
  */
 
-#define NUM_LEDS 60
-#define PACKET_SIZE 4096
+#define PACKET_SIZE 20480
+#define WINDOW_RATIO 10
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <alsa/asoundlib.h>
 
-#include "capture_main.h"
+#include "colors.h"
+#include "fft.h"
+#include "frame_buffer.h"
 
-/*
+/* 
  * Capture Callback
  *
- * Captures up to PACKET_SIZE and at least available_frames frames from the
- * audio interface and enqueues them into the frame buffer.
+ * Captures up to PACKET_SIZE frames or at least all available_frames from the
+ * PCM capture stream and enqueues them into the frame buffer.
  *
- * Returns the number of frames buffered or -1 in the event of an error.
+ * Returns the number of frames buffered or a negative error code.
  */
 int capture_callback(snd_pcm_t *pcm_handle,
                      unsigned int available_frames,
                      fb_t frame_buffer) {
-  // TODO
+  frame buf[available_frames];
+  snd_pcm_readi(pcm_handle, &buf, available_frames);
 
-  // Try to available_frames frames from the pcm device to the frame_buffer
-  int n;
-  for (n = 0; n < available_frames; n++) {
-    frame f;
-    snd_pcm_readi(pcm_handle, &f, 1);
-    fb_enqueue(frame_buffer, f);
+  // printf("First frame = {%d, %d}\n", buf[0].l, buf[0].r);
+
+  // TODO: Try to get available_frames frames from the pcm device to the
+  // frame_buffer
+ 
+  int f;
+  for (f = 0; f < available_frames; f++) {
+    //frame f;
+    //snd_pcm_readi(pcm_handle, &f, 1);
+    fb_enqueue(frame_buffer, buf[f]);
   }
 
-  return n;
-}
-
-/*
- * Calculate Spectrum
- *
- * Calculates the frequency spectrum of the frames in the frame buffer and
- * enqueues the frequency spectrum into the spectrum buffer.
- *
- * Returns the number of frames analyzed or -1 in the event of an error.
- */
-int calculate_spectrum(fb_t frame_buffer,
-                       spectrum_buffer_t spectrum_buffer) {
-  // Perform a Fast-Fourier-Transform into frequency ranges (spectrum) over the
-  // contents of the frame_buffer.  Enqueue this spectrum into the
-  // frequency_buffer.
-  // TODO
-
-  return 0;
-}
-
-/*
- * Update Colors
- *
- * Uses the trends in the frequency spectrum in the spectrum buffer to update
- * color of the LEDs in the LED Array.
- *
- * Returns the number of LEDs updated or -1 in the event of an error.
- */
-int update_colors(spectrum_buffer_t spectrum_buffer,
-                  colors_t colors) {
-  // TODO
   return 0;
 }
 
@@ -144,7 +125,7 @@ int main(int argc, char **argv) {
   }
   snd_pcm_hw_params_free(hw_params);
 
-  /* Configure this ALSA session to interrupt whenever 4096 or more frames of
+  /* Configure this ALSA session to interrupt whenever PACKET_SIZE or more frames of
    * captured audio is available to be processed */
 
   // Allocate software parameters
@@ -161,8 +142,9 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Set available frames minimum (4096)
-  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, 4096))
+  // Set available frames minimum (PACKET_SIZE)
+  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, 
+                                             PACKET_SIZE / WINDOW_RATIO))
       < 0) {
     fprintf(stderr, "Cannot set minimum available frames: 4096 (%s)\n",
             snd_strerror(err));
@@ -192,11 +174,20 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  // Start PCM device
+  if ((err = snd_pcm_start(pcm_handle)) < 0) {
+    fprintf(stderr, "Cannot start stream (%s)\n", snd_strerror(err));
+    exit(1);
+  }
+
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
-  spectrum_buffer_t spectrum_buffer = NULL;
-  colors_t colors = NULL;
-  // TODO
+
+  spectrum *spec = (spectrum *)malloc(sizeof(spectrum));
+  spec->lo = 0; spec->md = 0; spec->hi = 0;
+
+  color_array *c = (color_array *)malloc(sizeof(color_array));
+  memset(c, 0, sizeof(c));
 
   /* Mainloop */
   while (1) {
@@ -204,10 +195,10 @@ int main(int argc, char **argv) {
     int frames_buffered;
 
     // TEMP: Use a shorter time than one second (needs tuning)
-    /*if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
+    if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
       fprintf(stderr, "Poll failed (%s)\n", snd_strerror(err));
       break;
-    }*/
+    }
 
     // Find out how many frames the interface has available
     if ((frames_available = snd_pcm_avail_update(pcm_handle)) < 0) {
@@ -217,28 +208,30 @@ int main(int argc, char **argv) {
       } else {
         fprintf(stderr, "unknown snd_pcm_avail_update valued returned (%d)\n",
                 frames_available);
-        break;
+        //break;
       }
     }
-    printf("frames_available = %d\n", frames_available);
+    /*if (frames_available > 0) printf("frames_available = %d\n",
+                                     frames_available);*/
 
     // Capture the available frames
     if ((frames_buffered = capture_callback(pcm_handle, frames_available,
                                             frame_buffer))
         != PACKET_SIZE) {
-      fprintf(stderr, "Capture callback failed\n");
-      break;
+      //fprintf(stderr, "Capture callback failed\n");
+      //break;
     }
 
     // Calculate spectrum
-    if (calculate_spectrum(frame_buffer, spectrum_buffer) !=
+    if (calculate_spectrum(fb_num_elements(frame_buffer), frame_buffer,
+                           spec) !=
         fb_num_elements(frame_buffer)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
 
     // Calculate color values
-    if (update_colors(spectrum_buffer, colors) != NUM_LEDS) {
+    if (calculate_colors(spec, c) != NUM_LEDS) {
       fprintf(stderr, "Update colors failed\n");
       break;
     }

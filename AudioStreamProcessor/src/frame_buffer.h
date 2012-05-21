@@ -5,16 +5,17 @@
  * 
  */
 
+#ifndef FRAME_BUFFER_H
+#define FRAME_BUFFER_H 
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-//#include "capture_main.h"
-
 typedef struct {
-  uint16_t l;
-  uint16_t r;
+  int16_t l;
+  int16_t r;
 } frame;
 
 struct fb_data {
@@ -26,7 +27,6 @@ struct fb_data {
 };
 
 typedef struct fb_data *fb_t;
-//typedef void* q_element_t;
 
 /*
  * Creates a new caching queue with the passed maximum size and returns it.
@@ -47,6 +47,13 @@ frame fb_enqueue(fb_t b, frame f);
 frame fb_dequeue(fb_t b);
 
 /*
+ * Returns the contents of the frame buffer as an array of doubles
+ */
+double *fb_todoubles(fb_t b);
+
+// TODO: Remove below functions
+
+/*
  * Returns whether or not there are any elements in the queue.
  */
 bool fb_is_empty(fb_t b);
@@ -65,3 +72,5 @@ unsigned int fb_num_elements(fb_t b);
  * Returns the maximum size of the queue.
  */
 unsigned int fb_size(fb_t b);
+
+#endif

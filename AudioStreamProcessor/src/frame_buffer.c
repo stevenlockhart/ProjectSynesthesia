@@ -4,10 +4,7 @@
  * Frame Buffer
  */
 
-/*typedef struct {
-  uint16_t l;
-  uint16_t r;
-} frame;*/
+#include <stdio.h>
 
 #include "frame_buffer.h"
 
@@ -65,6 +62,24 @@ frame fb_dequeue(fb_t b) {
     return tmp;
   }
 }
+
+double *fb_todoubles(fb_t b) {
+  double *d = (double *)malloc(sizeof(double) * b->num_elements);
+  if (!d) {
+    fprintf(stderr, "Malloc failed in fb_todoubles.\n");
+    exit(1);
+  }
+
+  int n;
+  for (n = 0; n < b->num_elements; n++) {
+    // TEMP: Use only left channel
+    d[n] = (double)b->elements[n].l;
+  }
+
+  return d;
+}
+
+// TODO: Remove below functions
 
 bool fb_is_empty(fb_t b) {
   return b->num_elements == 0;
