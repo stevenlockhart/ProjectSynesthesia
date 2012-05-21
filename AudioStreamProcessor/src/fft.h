@@ -7,6 +7,9 @@
  * implemented with fftw3.2.2
  */
 
+#ifndef FFT_H
+#define FFT_H
+
 #include "frame_buffer.h"
 
 typedef struct {
@@ -28,3 +31,5 @@ typedef struct {
  */
 int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
                        spectrum *spec);
+
+#endif

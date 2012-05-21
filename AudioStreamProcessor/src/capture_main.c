@@ -10,8 +10,8 @@
  * Array
  */
 
-#define NUM_LEDS 60
 #define PACKET_SIZE 20480
+#define WINDOW_RATIO 10
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -157,7 +157,8 @@ int main(int argc, char **argv) {
   }
 
   // Set available frames minimum (PACKET_SIZE)
-  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, PACKET_SIZE))
+  if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, 
+                                             PACKET_SIZE / WINDOW_RATIO))
       < 0) {
     fprintf(stderr, "Cannot set minimum available frames: 4096 (%s)\n",
             snd_strerror(err));
