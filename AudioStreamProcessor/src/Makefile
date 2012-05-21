@@ -15,7 +15,7 @@ $(BIN)audio_stream_processor : $(OBJECTS)
 #	$(CC) $(CFLAGS) -c caching_queue.o -o $(BIN)caching_queue_test caching_queue_test.c
 
 capture_main.o : capture_main.c
-	$(CC) $(CFLAGS) -c -lasound -o capture_main.o capture_main.c
+	$(CC) $(CFLAGS) -c -o capture_main.o capture_main.c
 	
 colors.o : colors.c
 	$(CC) $(CFLAGS) -c -o colors.o colors.c
@@ -24,7 +24,7 @@ frame_buffer.o : frame_buffer.c
 	$(CC) $(CFLAGS) -c -o frame_buffer.o frame_buffer.c
 
 fft.o : fft.c
-	$(CC) $(CFLAGS) -c -o -L:/usr/local/lib -lfftw3 -o fft.o fft.c
+	$(CC) $(CFLAGS) -c -o fft.o fft.c
 
 clean :
 	rm -f *.o
