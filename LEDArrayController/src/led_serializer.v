@@ -1,3 +1,8 @@
+/*
+ * LED Serializer
+ *
+ * Ian Finder
+ */
 module led_serializer (rst, clk50, r, g, b, o, oDONE, oNEXT, oLED, oBIT);
 
 	// Set IO
