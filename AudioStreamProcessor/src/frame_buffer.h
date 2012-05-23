@@ -3,6 +3,7 @@
  *
  * Frame Buffer
  * 
+ * Frame Buffer implemented as fixed size queue implemented as a circular buffer
  */
 
 #ifndef FRAME_BUFFER_H
@@ -18,59 +19,36 @@ typedef struct {
   int16_t r;
 } frame;
 
-struct fb_data {
-  frame *elements;
-  unsigned int num_elements;
-  unsigned int max_num_elements;
+struct frame_buf {
+  frame *frames;
+  size_t size;
+  size_t max_size;
   unsigned int head;
   unsigned int tail;
 };
-
-typedef struct fb_data *fb_t;
+typedef struct frame_buf *frame_buf_t;
 
 /*
  * Creates a new caching queue with the passed maximum size and returns it.
  */
-fb_t fb_create(unsigned int max_size);
+frame_buf_t fb_create(size_t max_size);
 
 /*
  * Adds a new element at the tail of the queue.  If the queue is already at its
  * maximum size, one element is dequeued from the head of the queue.  The
  * dequeued element is returned.  If no element was dequeued, NULL is returned.
  */
-frame fb_enqueue(fb_t b, frame f);
+frame fb_enqueue(frame_buf_t b, frame f);
 
 /*
  * Removes an element from the head of the queue and returns it.  If the queue
  * is empty, NULL is returned.
  */
-frame fb_dequeue(fb_t b);
+frame fb_dequeue(frame_buf_t b);
 
 /*
  * Returns the contents of the frame buffer as an array of doubles
  */
-double *fb_todoubles(fb_t b);
-
-// TODO: Remove below functions
-
-/*
- * Returns whether or not there are any elements in the queue.
- */
-bool fb_is_empty(fb_t b);
-
-/*
- * Returns whether or not the queue is at its maximum size.
- */
-bool fb_is_full(fb_t b);
-
-/*
- * Returns the number of elements in the queue.
- */
-unsigned int fb_num_elements(fb_t b);
-
-/*
- * Returns the maximum size of the queue.
- */
-unsigned int fb_size(fb_t b);
+double *fb_todoubles(frame_buf_t b);
 
 #endif

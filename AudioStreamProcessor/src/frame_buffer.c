@@ -8,91 +8,74 @@
 
 #include "frame_buffer.h"
 
-fb_t fb_create(unsigned int max_size) {
-  fb_t b = (fb_t)malloc(sizeof(struct fb_data));
-  if (!b) return NULL;
+frame_buf_t fb_create(size_t max_size) {
+  frame_buf_t buf = (frame_buf_t)malloc(sizeof(struct frame_buf));
+  if (!buf) return NULL;
 
-  b->elements = malloc(sizeof(void*) * max_size);
-  if (!b->elements) return NULL;
+  buf->frames = malloc(sizeof(frame) * max_size);
+  if (!buf->frames) return NULL;
 
-  b->max_num_elements = max_size;
-  b->num_elements = 0;
-  b->head = 0;
-  b->tail = 0;
+  buf->max_size = max_size;
+  buf->size = 0;
+  buf->head = 0;
+  buf->tail = 0;
 
-  return b;
+  return buf;
 }
 
-frame fb_enqueue(fb_t b, frame f) {
-  assert(b != NULL);
+frame fb_enqueue(frame_buf_t buf, frame f) {
+  assert(buf != NULL);
 
-  frame tmp;  tmp.l = 0;  tmp.r = 0;
-  tmp.l = 0;
-  tmp.r = 0;
-  if (fb_is_empty(b)) {
-    b->elements[b->tail] = f;
+  frame ret;  ret.l = 0;  ret.r = 0;
+  ret.l = 0;
+  ret.r = 0;
+  if (buf->size == 0) {
+    buf->frames[buf->tail] = f;
   } else {
-    if (fb_is_full(b)) {
-      tmp = fb_dequeue(b);
+    if (buf->size == buf->max_size) {
+      ret = fb_dequeue(buf);
     }
-    b->tail++;
-    if (b->tail == b->max_num_elements) b->tail = 0;
-    b->elements[b->tail] = f;
+    buf->tail++;
+    if (buf->tail == buf->max_size) buf->tail = 0;
+    buf->frames[buf->tail] = f;
   }
-  b->num_elements++;
+  buf->size++;
 
-  return tmp;
+  return ret;
 }
 
-frame fb_dequeue(fb_t b) {
-  assert(b != NULL);
+frame fb_dequeue(frame_buf_t buf) {
+  assert(buf != NULL);
   
-  if (fb_is_empty(b)) {
-    frame null;  null.l = 0;  null.r = 0;
-    return null;
-  } else if (b->head == b->tail) {
-    b->num_elements--;
+  if (buf->size == 0) {
+    frame null_frame;  null_frame.l = 0;  null_frame.r = 0;
+    return null_frame;
+  } else if (buf->head == buf->tail) {
+    buf->size--;
 
-    return b->elements[b->head];
+    return buf->frames[buf->head];
   } else {
-    frame tmp = b->elements[b->head];
-    b->head++;
-    if (b->head == b->max_num_elements) b->head = 0;
-    b->num_elements--;
-    return tmp;
+    frame ret = buf->frames[buf->head];
+    buf->head++;
+    if (buf->head == buf->max_size) buf->head = 0;
+    buf->size--;
+
+    return ret;
   }
 }
 
-double *fb_todoubles(fb_t b) {
-  double *d = (double *)malloc(sizeof(double) * b->num_elements);
-  if (!d) {
+double *fb_todoubles(frame_buf_t buf) {
+  double *ret = (double *)malloc(sizeof(double) * buf->size);
+  if (!ret) {
     fprintf(stderr, "Malloc failed in fb_todoubles.\n");
     exit(1);
   }
 
-  int n;
-  for (n = 0; n < b->num_elements; n++) {
+  int i;
+  for (i = 0; i < buf->size; i++) {
     // TEMP: Use only left channel
-    d[n] = (double)b->elements[n].l;
+    ret[i] = (double)buf->frames[i].l;
   }
 
-  return d;
-}
-
-// TODO: Remove below functions
-
-bool fb_is_empty(fb_t b) {
-  return b->num_elements == 0;
-}
-
-bool fb_is_full(fb_t b) {
-  return b->num_elements == b->max_num_elements;
-}
-
-unsigned int fb_num_elements(fb_t b) {
-  return b->num_elements;
-}
-
-unsigned int fb_max_num_elements(fb_t b) {
-  return b->max_num_elements;
+  return ret;
 }

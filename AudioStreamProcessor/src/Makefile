@@ -1,15 +1,16 @@
 CC=gcc
 CFLAGS=-Wall -g
 BIN=../bin/
-SOURCES=capture_main.c colors.c frame_buffer.c fft.c
+SOURCES=capture_main.c color.c frame_buffer.c frequency.c
 OBJECTS=$(SOURCES:.c=.o)
+LIBS=-lasound -L:/usr/local/lib -lfftw3 -lm
 EXECUTABLES=$(BIN)audio_stream_processor
 #TESTS=$(BIN)caching_queue_test
 
 all : $(EXECUTABLES) # $(TESTS)
 
 $(BIN)audio_stream_processor : $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -lasound -L:/usr/local/lib -lfftw3 -lm -o $@
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $@
 
 #$(BIN)caching_queue_test : caching_queue.o caching_queue_test.c
 #	$(CC) $(CFLAGS) -c caching_queue.o -o $(BIN)caching_queue_test caching_queue_test.c

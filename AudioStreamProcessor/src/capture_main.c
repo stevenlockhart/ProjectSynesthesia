@@ -13,41 +13,41 @@
 #define PACKET_SIZE 20480
 #define WINDOW_RATIO 10
 
+#include <alsa/asoundlib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <alsa/asoundlib.h>
 
-#include "colors.h"
-#include "fft.h"
+#include "color.h"
+#include "frequency.h"
 #include "frame_buffer.h"
 
 /* 
  * Capture Callback
  *
- * Captures up to PACKET_SIZE frames or at least all available_frames from the
+ * Captures up to PACKET_SIZE frames or at least all frames_avail from the
  * PCM capture stream and enqueues them into the frame buffer.
  *
  * Returns the number of frames buffered or a negative error code.
  */
 int capture_callback(snd_pcm_t *pcm_handle,
-                     unsigned int available_frames,
-                     fb_t frame_buffer) {
-  frame buf[available_frames];
-  snd_pcm_readi(pcm_handle, &buf, available_frames);
+                     unsigned int frames_avail,
+                     frame_buf_t buf) {
+  frame tmp[frames_avail];
+  snd_pcm_readi(pcm_handle, &tmp, frames_avail);
 
   // printf("First frame = {%d, %d}\n", buf[0].l, buf[0].r);
 
-  // TODO: Try to get available_frames frames from the pcm device to the
+  // TODO: Try to get frames_avail frames from the pcm device to the
   // frame_buffer
  
-  int f;
-  for (f = 0; f < available_frames; f++) {
-    //frame f;
-    //snd_pcm_readi(pcm_handle, &f, 1);
-    fb_enqueue(frame_buffer, buf[f]);
+  int i;
+  for (i = 0; i < frames_avail; i++) {
+    //frame i;
+    //snd_pcm_readi(pcm_handle, &i, 1);
+    fb_enqueue(buf, tmp[i]);
   }
 
-  return 0;
+  return i;
 }
 
 /*
@@ -101,8 +101,7 @@ int main(int argc, char **argv) {
   }
     
   // Set sample rate (44100)
-  if ((err = snd_pcm_hw_params_set_rate(pcm_handle, hw_params, 44100, 0))
-      < 0) {
+  if ((err = snd_pcm_hw_params_set_rate(pcm_handle, hw_params, 44100, 0)) < 0) {
     fprintf(stderr, "Cannot set sample rate: 44100 (%s)\n", snd_strerror(err));
     exit(1);
   }
@@ -125,8 +124,8 @@ int main(int argc, char **argv) {
   }
   snd_pcm_hw_params_free(hw_params);
 
-  /* Configure this ALSA session to interrupt whenever PACKET_SIZE or more frames of
-   * captured audio is available to be processed */
+  /* Configure this ALSA session to interrupt whenever PACKET_SIZE or more
+   * frames of captured audio is available to be processed */
 
   // Allocate software parameters
   if ((err = snd_pcm_sw_params_malloc(&sw_params)) < 0) {
@@ -144,8 +143,7 @@ int main(int argc, char **argv) {
 
   // Set available frames minimum (PACKET_SIZE)
   if ((err = snd_pcm_sw_params_set_avail_min(pcm_handle, sw_params, 
-                                             PACKET_SIZE / WINDOW_RATIO))
-      < 0) {
+                                             PACKET_SIZE / WINDOW_RATIO)) < 0) {
     fprintf(stderr, "Cannot set minimum available frames: 4096 (%s)\n",
             snd_strerror(err));
     exit(1);
@@ -181,60 +179,59 @@ int main(int argc, char **argv) {
   }
 
   /* Set up internal data structures */
-  fb_t frame_buffer = fb_create(PACKET_SIZE);
+  frame_buf_t buf = fb_create(PACKET_SIZE);
 
-  spectrum *spec = (spectrum *)malloc(sizeof(spectrum));
+  freq_spec_t spec = (freq_spec_t)malloc(sizeof(struct freq_spec));
   spec->lo = 0; spec->md = 0; spec->hi = 0;
 
-  color_array *c = (color_array *)malloc(sizeof(color_array));
-  memset(c, 0, sizeof(c));
+  color_array_t colors = (color_array_t)malloc(sizeof(struct color) * NUM_LEDS);
+  memset(colors, 0, sizeof(struct color) * NUM_LEDS);
 
   /* Mainloop */
   while (1) {
-    int frames_available;
-    int frames_buffered;
+    size_t frames_avail;
+    size_t frames_buffered;
 
-    // TEMP: Use a shorter time than one second (needs tuning)
+    // TODO: Tune wait time
     if ((err = snd_pcm_wait(pcm_handle, 1000)) < 0) {
       fprintf(stderr, "Poll failed (%s)\n", snd_strerror(err));
       break;
     }
 
     // Find out how many frames the interface has available
-    if ((frames_available = snd_pcm_avail_update(pcm_handle)) < 0) {
-      if (frames_available == -EPIPE) {
+    if ((frames_avail = snd_pcm_avail_update(pcm_handle)) < 0) {
+      if (frames_avail == -EPIPE) {
         fprintf(stderr, "An xrun error occured\n");
         break;
       } else {
         fprintf(stderr, "unknown snd_pcm_avail_update valued returned (%d)\n",
-                frames_available);
+                frames_avail);
         //break;
       }
     }
-    /*if (frames_available > 0) printf("frames_available = %d\n",
-                                     frames_available);*/
+    /*if (frames_avail > 0) printf("frames_avail = %d\n", frames_avail);*/
 
     // Capture the available frames
-    if ((frames_buffered = capture_callback(pcm_handle, frames_available,
-                                            frame_buffer))
-        != PACKET_SIZE) {
-      //fprintf(stderr, "Capture callback failed\n");
-      //break;
+    if ((frames_buffered = capture_callback(pcm_handle, frames_avail, buf))
+        < PACKET_SIZE / WINDOW_RATIO) {
+      fprintf(stderr, "Capture callback failed\n");
+      break;
     }
 
     // Calculate spectrum
-    if (calculate_spectrum(fb_num_elements(frame_buffer), frame_buffer,
-                           spec) !=
-        fb_num_elements(frame_buffer)) {
+    if (calculate_spectrum(buf, spec) != buf->size) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
 
     // Calculate color values
-    if (calculate_colors(spec, c) != NUM_LEDS) {
+    if (calculate_colors(spec, colors) != NUM_LEDS) {
       fprintf(stderr, "Update colors failed\n");
       break;
     }
+
+    // Send color values to LEDArray
+    // TODO
   }
  
   snd_pcm_close(pcm_handle);
