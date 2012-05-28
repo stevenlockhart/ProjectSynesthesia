@@ -1,0 +1,69 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow Model Setup 'CLOCK_50'
+Slack : -4.466
+TNS   : -1242.317
+
+Type  : Slow Model Setup 'led_serializer:ul0|state.S0'
+Slack : -2.242
+TNS   : -2.242
+
+Type  : Slow Model Hold 'CLOCK_50'
+Slack : -2.177
+TNS   : -41.906
+
+Type  : Slow Model Hold 'led_serializer:ul0|state.S0'
+Slack : 2.263
+TNS   : 0.000
+
+Type  : Slow Model Recovery 'CLOCK_50'
+Slack : -0.731
+TNS   : -19.415
+
+Type  : Slow Model Removal 'CLOCK_50'
+Slack : 1.163
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'CLOCK_50'
+Slack : -1.627
+TNS   : -1015.308
+
+Type  : Slow Model Minimum Pulse Width 'led_serializer:ul0|state.S0'
+Slack : 0.500
+TNS   : 0.000
+
+Type  : Fast Model Setup 'CLOCK_50'
+Slack : -2.043
+TNS   : -378.248
+
+Type  : Fast Model Setup 'led_serializer:ul0|state.S0'
+Slack : -0.727
+TNS   : -0.727
+
+Type  : Fast Model Hold 'CLOCK_50'
+Slack : -1.578
+TNS   : -40.960
+
+Type  : Fast Model Hold 'led_serializer:ul0|state.S0'
+Slack : 1.327
+TNS   : 0.000
+
+Type  : Fast Model Recovery 'CLOCK_50'
+Slack : -0.082
+TNS   : -0.082
+
+Type  : Fast Model Removal 'CLOCK_50'
+Slack : 0.679
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'CLOCK_50'
+Slack : -1.627
+TNS   : -1015.308
+
+Type  : Fast Model Minimum Pulse Width 'led_serializer:ul0|state.S0'
+Slack : 0.500
+TNS   : 0.000
+
+------------------------------------------------------------
