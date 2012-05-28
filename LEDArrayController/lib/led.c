@@ -1,3 +1,5 @@
+// led.c - (C) 2012 Ian Finder
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -96,30 +98,4 @@ int update_strand(STRAND * led) {
 }
 
 
-// DEMO CODE
-int main (int argc, char **argv) {
-	static char device[] = "/dev/tty.usbserial-FTELSJ0N";
-	STRAND * led = build_strand(30, device, 460800);    // Number of LEDs, Device, Baud
-	strand_info(led);
-	int i = 0;
-    int count = 0;
-	while (count < 200) {   // Run length
-		int z = i;
-		for (i = 0 ; i < led->leds ; i++) {
-			if (i % 2 == 0) {
-				led->colors[i*3] += 2;  //led->colors[(i*3) + 1] - 5;              // RED
-				led->colors[(i*3) + 1] = 0;// led->colors[(i*3) + 2] - 10;    // GREEN
-				led->colors[(i*3) + 2] = 0;//led->colors[(i*3)] + 20;    // BLEW
-			} else {
-                led->colors[i*3] = 0;                                     // ARE
-                led->colors[(i*3) + 1] = 0;                               // GEE
-                led->colors[(i*3) + 2] += 2;                               // BEE
-			}
-			//printf("LED %3d : %3d %3d %3d\n",i,led->colors[i*3],led->colors[(i*3) + 1], led->colors[(i*3) + 2]);
-		}	
-		update_strand(led);
-        count++;
-	}
-	free_strand(led);
-	return 0;
-}
+

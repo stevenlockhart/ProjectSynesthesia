@@ -1,3 +1,5 @@
+// led.h - (C) 2012 Ian Finder
+
 #define PACKETSZ 256            // Packet size for binary
 #define COMMAND 32              // Command byte (see verilog reference for Uart2Bus binary mode)
 struct strand_struct {
@@ -11,3 +13,10 @@ struct strand_struct {
 typedef struct strand_struct STRAND;
 
 
+STRAND * build_strand(int leds, char* device, int baud);
+
+int free_strand(STRAND * led);
+
+int strand_info(STRAND * led);
+
+int update_strand(STRAND * led);
