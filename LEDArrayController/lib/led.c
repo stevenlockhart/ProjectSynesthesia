@@ -84,8 +84,8 @@ int update_strand(STRAND * led) {
         }
         _p(fd,0);
         _p(fd,COMMAND);
-        low=i&0x00FF;
-        high=(i>>8)&0x00FF;
+        low=i&0x00FF;           // POTENTIAL ENDIANNESS ISSUE
+        high=(i>>8)&0x00FF;     // AND HERE. Check on different ARCH
         _p(fd,high);
         _p(fd,low);
         _p(fd,lbyte);        
