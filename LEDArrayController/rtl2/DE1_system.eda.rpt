@@ -1,5 +1,5 @@
 EDA Netlist Writer report for DE1_system
-Mon May 28 00:44:53 2012
+Mon May 28 16:48:22 2012
 Quartus II 32-bit Version 11.1 Build 173 11/01/2011 SJ Web Edition
 
 
@@ -36,7 +36,7 @@ applicable agreement for further details.
 +-------------------------------------------------------------------+
 ; EDA Netlist Writer Summary                                        ;
 +---------------------------+---------------------------------------+
-; EDA Netlist Writer Status ; Successful - Mon May 28 00:44:53 2012 ;
+; EDA Netlist Writer Status ; Successful - Mon May 28 16:48:22 2012 ;
 ; Revision Name             ; DE1_system                            ;
 ; Top-level Entity Name     ; DE1_system                            ;
 ; Family                    ; Cyclone II                            ;
@@ -84,12 +84,12 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II 32-bit EDA Netlist Writer
     Info: Version 11.1 Build 173 11/01/2011 SJ Web Edition
-    Info: Processing started: Mon May 28 00:44:52 2012
+    Info: Processing started: Mon May 28 16:48:21 2012
 Info: Command: quartus_eda --read_settings_files=off --write_settings_files=off LEDmonster -c DE1_system
 Info (204026): Generated files "DE1_system.vho", "DE1_system_fast.vho", "DE1_system_vhd.sdo" and "DE1_system_vhd_fast.sdo" in directory "C:/Users/Ian Finder/ledMonster/rtl2/simulation/modelsim/" for EDA simulation tool
 Info: Quartus II 32-bit EDA Netlist Writer was successful. 0 errors, 0 warnings
     Info: Peak virtual memory: 260 megabytes
-    Info: Processing ended: Mon May 28 00:44:53 2012
+    Info: Processing ended: Mon May 28 16:48:22 2012
     Info: Elapsed time: 00:00:01
     Info: Total CPU time (on all processors): 00:00:01
 

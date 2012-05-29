@@ -80,17 +80,21 @@ module DE1_system (LEDR, LEDG, HEX0, HEX1, HEX2, HEX3, UART_TXD, UART_RXD, KEY, 
 	assign LEDR[3] = ledr;
 	reg [16:0] seed;
 	assign hexD = 16'hbeef;
-	
+	wire ser_clk;
+	//assign ser_clk = clk;
 	wire [15:0] ser_addr;
 	wire [7:0]	ser_dta_out;
 	wire [7:0]	ser_dta_in;
 	wire ser_write;
-	uart2bus_top(.clock(clk), .reset(rst), .ser_in(rxU), .ser_out(txU), .int_address(ser_addr), .int_wr_data(ser_dta_in), .int_write(ser_write),
+	
+	pll upll (.areset(rst), .inclk0(clk), .c0(ser_clk), .locked(LEDR[9])); 
+	assign LEDR[8] = ser_clk;
+	uart2bus_top(.clock(ser_clk), .reset(rst), .ser_in(rxU), .ser_out(txU), .int_address(ser_addr), .int_wr_data(ser_dta_in), .int_write(ser_write),
 	.int_rd_data(ser_dta_out), .int_gnt(1'b1)); 
 	
 
 	bram_tdp u10(.a_clk(clk), .a_wr(1'b0), .a_addr(ledNUM), .a_din(0), .a_dout({r,g,b}), 
-					 .b_clk(clk) , .b_wr(ser_write), .b_addr(ser_addr[9:0]), .b_din(ser_dta_in), .b_dout(ser_dta_out));
+					 .b_clk(ser_clk) , .b_wr(ser_write), .b_addr(ser_addr[9:0]), .b_din(ser_dta_in), .b_dout(ser_dta_out));
 /* 
 	 parameter DATA = 8,
     parameter ADDR = 8

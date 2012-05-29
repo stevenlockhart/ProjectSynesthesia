@@ -7,7 +7,7 @@ struct strand_struct {
 	unsigned char *device;      // LED serial device (HINT: For the nice FTDI, "/dev/tty.usbserial-FTELSJ0N")
 	int fd;                     // Serial FD
 	unsigned char *colors;      // Color Table  (0 indexed, will have size of 3 (num. colors) * leds)
-	unsigned int baud;          // Serial Baud  (HINT: For the nice FTDI and latest FPGA code, 460800)
+	unsigned int baud;          // Serial Baud  (HINT: For the nice FTDI and latest FPGA code, 921600)
 };
 
 typedef struct strand_struct STRAND;

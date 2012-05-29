@@ -98,7 +98,7 @@ GND*                         : AA5       :        :                   :         
 GND*                         : AA6       :        :                   :         : 8         :                
 GND*                         : AA7       :        :                   :         : 8         :                
 GND*                         : AA8       :        :                   :         : 8         :                
-GND*                         : AA9       :        :                   :         : 8         :                
+GPIO_0[16]                   : AA9       : output : 3.3-V LVTTL       :         : 8         : N              
 GND*                         : AA10      :        :                   :         : 8         :                
 GND*                         : AA11      :        :                   :         : 8         :                
 GND*                         : AA12      :        :                   :         : 7         :                
@@ -117,7 +117,7 @@ VCCIO8                       : AB2       : power  :                   : 3.3V    
 GND*                         : AB3       :        :                   :         : 8         :                
 GND*                         : AB4       :        :                   :         : 8         :                
 GND*                         : AB5       :        :                   :         : 8         :                
-GPIO_0[16]                   : AB6       : output : 3.3-V LVTTL       :         : 8         : N              
+GND*                         : AB6       :        :                   :         : 8         :                
 GND*                         : AB7       :        :                   :         : 8         :                
 GND*                         : AB8       :        :                   :         : 8         :                
 GND*                         : AB9       :        :                   :         : 8         :                
@@ -250,7 +250,7 @@ HEX1[4]                      : G3        : output : 3.3-V LVTTL       :         
 GND                          : G4        : gnd    :                   :         :           :                
 HEX2[0]                      : G5        : output : 3.3-V LVTTL       :         : 2         : Y              
 HEX2[1]                      : G6        : output : 3.3-V LVTTL       :         : 2         : Y              
-GPIO_0[17]                   : G7        : output : 3.3-V LVTTL       :         : 3         : N              
+GND*                         : G7        :        :                   :         : 3         :                
 GND*                         : G8        :        :                   :         : 3         :                
 VCCIO3                       : G9        : power  :                   : 3.3V    : 3         :                
 GND                          : G10       : gnd    :                   :         :           :                
@@ -443,7 +443,7 @@ LEDR[0]                      : R20       : output : 3.3-V LVTTL       :         
 KEY[1]                       : R21       : input  : 3.3-V LVTTL       :         : 6         : Y              
 KEY[0]                       : R22       : input  : 3.3-V LVTTL       :         : 6         : Y              
 GND*                         : T1        :        :                   :         : 1         :                
-GND*                         : T2        :        :                   :         : 1         :                
+GPIO_0[17]                   : T2        : output : 3.3-V LVTTL       :         : 1         : N              
 GND*                         : T3        :        :                   :         : 1         :                
 VCCIO1                       : T4        : power  :                   : 3.3V    : 1         :                
 GND*                         : T5        :        :                   :         : 1         :                

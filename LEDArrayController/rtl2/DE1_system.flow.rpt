@@ -1,5 +1,5 @@
 Flow report for DE1_system
-Mon May 28 00:44:53 2012
+Mon May 28 16:48:22 2012
 Quartus II 32-bit Version 11.1 Build 173 11/01/2011 SJ Web Edition
 
 
@@ -38,7 +38,7 @@ applicable agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Flow Summary                                                                  ;
 +------------------------------------+------------------------------------------+
-; Flow Status                        ; Successful - Mon May 28 00:44:53 2012    ;
+; Flow Status                        ; Successful - Mon May 28 16:48:22 2012    ;
 ; Quartus II 32-bit Version          ; 11.1 Build 173 11/01/2011 SJ Web Edition ;
 ; Revision Name                      ; DE1_system                               ;
 ; Top-level Entity Name              ; DE1_system                               ;
@@ -46,14 +46,14 @@ applicable agreement for further details.
 ; Device                             ; EP2C20F484C6                             ;
 ; Timing Models                      ; Final                                    ;
 ; Total logic elements               ; 432 / 18,752 ( 2 % )                     ;
-;     Total combinational functions  ; 396 / 18,752 ( 2 % )                     ;
+;     Total combinational functions  ; 398 / 18,752 ( 2 % )                     ;
 ;     Dedicated logic registers      ; 259 / 18,752 ( 1 % )                     ;
 ; Total registers                    ; 259                                      ;
 ; Total pins                         ; 103 / 315 ( 33 % )                       ;
 ; Total virtual pins                 ; 0                                        ;
 ; Total memory bits                  ; 32,768 / 239,616 ( 14 % )                ;
 ; Embedded Multiplier 9-bit elements ; 0 / 52 ( 0 % )                           ;
-; Total PLLs                         ; 0 / 4 ( 0 % )                            ;
+; Total PLLs                         ; 1 / 4 ( 25 % )                           ;
 +------------------------------------+------------------------------------------+
 
 
@@ -62,7 +62,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 05/28/2012 00:43:25 ;
+; Start date & time ; 05/28/2012 16:48:06 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; DE1_system          ;
 +-------------------+---------------------+
@@ -73,11 +73,15 @@ applicable agreement for further details.
 +-------------------------------------+---------------------------------------+---------------+-------------+----------------+
 ; Assignment Name                     ; Value                                 ; Default Value ; Entity Name ; Section Id     ;
 +-------------------------------------+---------------------------------------+---------------+-------------+----------------+
-; COMPILER_SIGNATURE_ID               ; 345055143456.133819100401648          ; --            ; --          ; --             ;
+; COMPILER_SIGNATURE_ID               ; 345055040576.133824888602184          ; --            ; --          ; --             ;
 ; EDA_OUTPUT_DATA_FORMAT              ; Vhdl                                  ; --            ; --          ; eda_simulation ;
 ; EDA_SIMULATION_TOOL                 ; ModelSim-Altera (VHDL)                ; <None>        ; --          ; --             ;
+; IP_TOOL_NAME                        ; ALTPLL                                ; --            ; --          ; --             ;
+; IP_TOOL_VERSION                     ; 11.1                                  ; --            ; --          ; --             ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                    ; --            ; --          ; --             ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                     ; --            ; --          ; --             ;
+; MISC_FILE                           ; pll_bb.v                              ; --            ; --          ; --             ;
+; MISC_FILE                           ; pll.ppf                               ; --            ; --          ; --             ;
 ; PARTITION_COLOR                     ; 16764057                              ; --            ; --          ; Top            ;
 ; PARTITION_FITTER_PRESERVATION_LEVEL ; PLACEMENT_AND_ROUTING                 ; --            ; --          ; Top            ;
 ; PARTITION_NETLIST_TYPE              ; SOURCE                                ; --            ; --          ; Top            ;
@@ -91,12 +95,12 @@ applicable agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:40     ; 1.0                     ; 312 MB              ; 00:00:39                           ;
-; Fitter                    ; 00:00:25     ; 1.0                     ; 353 MB              ; 00:00:24                           ;
-; TimeQuest Timing Analyzer ; 00:00:17     ; 1.0                     ; 275 MB              ; 00:00:15                           ;
-; Assembler                 ; 00:00:07     ; 1.0                     ; 295 MB              ; 00:00:06                           ;
+; Analysis & Synthesis      ; 00:00:06     ; 1.0                     ; 314 MB              ; 00:00:06                           ;
+; Fitter                    ; 00:00:05     ; 1.0                     ; 353 MB              ; 00:00:04                           ;
+; Assembler                 ; 00:00:01     ; 1.0                     ; 295 MB              ; 00:00:01                           ;
+; TimeQuest Timing Analyzer ; 00:00:01     ; 1.0                     ; 275 MB              ; 00:00:02                           ;
 ; EDA Netlist Writer        ; 00:00:01     ; 1.0                     ; 248 MB              ; 00:00:01                           ;
-; Total                     ; 00:01:30     ; --                      ; --                  ; 00:01:25                           ;
+; Total                     ; 00:00:14     ; --                      ; --                  ; 00:00:14                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -107,8 +111,8 @@ applicable agreement for further details.
 +---------------------------+------------------+-----------+------------+----------------+
 ; Analysis & Synthesis      ; Finder-WinDevVM  ; Windows 7 ; 6.1        ; x86_64         ;
 ; Fitter                    ; Finder-WinDevVM  ; Windows 7 ; 6.1        ; x86_64         ;
-; TimeQuest Timing Analyzer ; Finder-WinDevVM  ; Windows 7 ; 6.1        ; x86_64         ;
 ; Assembler                 ; Finder-WinDevVM  ; Windows 7 ; 6.1        ; x86_64         ;
+; TimeQuest Timing Analyzer ; Finder-WinDevVM  ; Windows 7 ; 6.1        ; x86_64         ;
 ; EDA Netlist Writer        ; Finder-WinDevVM  ; Windows 7 ; 6.1        ; x86_64         ;
 +---------------------------+------------------+-----------+------------+----------------+
 
@@ -118,8 +122,8 @@ applicable agreement for further details.
 ------------
 quartus_map --read_settings_files=on --write_settings_files=off LEDmonster -c DE1_system
 quartus_fit --read_settings_files=off --write_settings_files=off LEDmonster -c DE1_system
-quartus_sta LEDmonster -c DE1_system
 quartus_asm --read_settings_files=off --write_settings_files=off LEDmonster -c DE1_system
+quartus_sta LEDmonster -c DE1_system
 quartus_eda --read_settings_files=off --write_settings_files=off LEDmonster -c DE1_system
 
 

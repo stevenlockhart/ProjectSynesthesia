@@ -1,5 +1,5 @@
 
-State Machine - |DE1_system|uart2bus_top:comb_53|uart_parser:uart_parser1|tx_sm
+State Machine - |DE1_system|uart2bus_top:comb_54|uart_parser:uart_parser1|tx_sm
 Name tx_sm.101 tx_sm.100 tx_sm.001 tx_sm.000 tx_sm.110 
 tx_sm.000 0 0 0 0 0 
 tx_sm.001 0 0 1 1 0 
@@ -7,7 +7,7 @@ tx_sm.100 0 1 0 1 0
 tx_sm.101 1 0 0 1 0 
 tx_sm.110 0 0 0 1 1 
 
-State Machine - |DE1_system|uart2bus_top:comb_53|uart_parser:uart_parser1|main_sm
+State Machine - |DE1_system|uart2bus_top:comb_54|uart_parser:uart_parser1|main_sm
 Name main_sm.1100 main_sm.1011 main_sm.1010 main_sm.1001 main_sm.1000 main_sm.0101 main_sm.0100 main_sm.0011 main_sm.0010 main_sm.0001 main_sm.0000 
 main_sm.0000 0 0 0 0 0 0 0 0 0 0 0 
 main_sm.0001 0 0 0 0 0 0 0 0 0 1 1 

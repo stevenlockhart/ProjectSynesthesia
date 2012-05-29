@@ -2,68 +2,92 @@
 TimeQuest Timing Analyzer Summary
 ------------------------------------------------------------
 
-Type  : Slow Model Setup 'CLOCK_50'
-Slack : -4.466
-TNS   : -1242.317
-
 Type  : Slow Model Setup 'led_serializer:ul0|state.S0'
-Slack : -2.242
-TNS   : -2.242
+Slack : -2.516
+TNS   : -2.516
+
+Type  : Slow Model Setup 'CLOCK_50'
+Slack : 0.615
+TNS   : 0.000
+
+Type  : Slow Model Setup 'upll|altpll_component|pll|clk[0]'
+Slack : 0.685
+TNS   : 0.000
 
 Type  : Slow Model Hold 'CLOCK_50'
-Slack : -2.177
-TNS   : -41.906
+Slack : -1.699
+TNS   : -30.934
+
+Type  : Slow Model Hold 'upll|altpll_component|pll|clk[0]'
+Slack : 0.391
+TNS   : 0.000
 
 Type  : Slow Model Hold 'led_serializer:ul0|state.S0'
-Slack : 2.263
+Slack : 2.566
 TNS   : 0.000
 
 Type  : Slow Model Recovery 'CLOCK_50'
-Slack : -0.731
-TNS   : -19.415
-
-Type  : Slow Model Removal 'CLOCK_50'
-Slack : 1.163
+Slack : 18.021
 TNS   : 0.000
 
-Type  : Slow Model Minimum Pulse Width 'CLOCK_50'
-Slack : -1.627
-TNS   : -1015.308
+Type  : Slow Model Removal 'CLOCK_50'
+Slack : 1.107
+TNS   : 0.000
 
 Type  : Slow Model Minimum Pulse Width 'led_serializer:ul0|state.S0'
 Slack : 0.500
 TNS   : 0.000
 
-Type  : Fast Model Setup 'CLOCK_50'
-Slack : -2.043
-TNS   : -378.248
+Type  : Slow Model Minimum Pulse Width 'upll|altpll_component|pll|clk[0]'
+Slack : 1.206
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'CLOCK_50'
+Slack : 7.620
+TNS   : 0.000
 
 Type  : Fast Model Setup 'led_serializer:ul0|state.S0'
-Slack : -0.727
-TNS   : -0.727
+Slack : -0.841
+TNS   : -0.841
+
+Type  : Fast Model Setup 'CLOCK_50'
+Slack : 1.192
+TNS   : 0.000
+
+Type  : Fast Model Setup 'upll|altpll_component|pll|clk[0]'
+Slack : 3.810
+TNS   : 0.000
 
 Type  : Fast Model Hold 'CLOCK_50'
-Slack : -1.578
-TNS   : -40.960
+Slack : -1.378
+TNS   : -35.589
+
+Type  : Fast Model Hold 'upll|altpll_component|pll|clk[0]'
+Slack : 0.215
+TNS   : 0.000
 
 Type  : Fast Model Hold 'led_serializer:ul0|state.S0'
-Slack : 1.327
+Slack : 1.449
 TNS   : 0.000
 
 Type  : Fast Model Recovery 'CLOCK_50'
-Slack : -0.082
-TNS   : -0.082
-
-Type  : Fast Model Removal 'CLOCK_50'
-Slack : 0.679
+Slack : 18.939
 TNS   : 0.000
 
-Type  : Fast Model Minimum Pulse Width 'CLOCK_50'
-Slack : -1.627
-TNS   : -1015.308
+Type  : Fast Model Removal 'CLOCK_50'
+Slack : 0.785
+TNS   : 0.000
 
 Type  : Fast Model Minimum Pulse Width 'led_serializer:ul0|state.S0'
 Slack : 0.500
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'upll|altpll_component|pll|clk[0]'
+Slack : 1.206
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'CLOCK_50'
+Slack : 7.620
 TNS   : 0.000
 
 ------------------------------------------------------------

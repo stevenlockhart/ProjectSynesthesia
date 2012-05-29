@@ -1,6 +1,6 @@
 |DE1_system
 UART_RXD => ~NO_FANOUT~
-KEY[0] => rst.IN1
+KEY[0] => rst.IN2
 KEY[1] => ~NO_FANOUT~
 KEY[2] => ~NO_FANOUT~
 KEY[3] => ~NO_FANOUT~
@@ -35,7 +35,7 @@ SW[6] => ~NO_FANOUT~
 SW[7] => ~NO_FANOUT~
 SW[8] => ~NO_FANOUT~
 SW[9] => ~NO_FANOUT~
-CLOCK_50 => clk.IN4
+CLOCK_50 => clk.IN3
 CLOCK_24[0] => ~NO_FANOUT~
 CLOCK_24[1] => ~NO_FANOUT~
 RXB => rxU.IN1
@@ -218,7 +218,46 @@ b[6] => color.DATAB
 b[7] => color.DATAB
 
 
-|DE1_system|uart2bus_top:comb_53
+|DE1_system|pll:upll
+areset => areset.IN1
+inclk0 => sub_wire4[0].IN1
+
+
+|DE1_system|pll:upll|altpll:altpll_component
+inclk[0] => pll.CLK
+inclk[1] => ~NO_FANOUT~
+fbin => ~NO_FANOUT~
+pllena => ~NO_FANOUT~
+clkswitch => ~NO_FANOUT~
+areset => pll.ARESET
+pfdena => ~NO_FANOUT~
+clkena[0] => ~NO_FANOUT~
+clkena[1] => ~NO_FANOUT~
+clkena[2] => ~NO_FANOUT~
+clkena[3] => ~NO_FANOUT~
+clkena[4] => ~NO_FANOUT~
+clkena[5] => ~NO_FANOUT~
+extclkena[0] => ~NO_FANOUT~
+extclkena[1] => ~NO_FANOUT~
+extclkena[2] => ~NO_FANOUT~
+extclkena[3] => ~NO_FANOUT~
+scanclk => ~NO_FANOUT~
+scanclkena => ~NO_FANOUT~
+scanaclr => ~NO_FANOUT~
+scanread => ~NO_FANOUT~
+scanwrite => ~NO_FANOUT~
+scandata => ~NO_FANOUT~
+phasecounterselect[0] => ~NO_FANOUT~
+phasecounterselect[1] => ~NO_FANOUT~
+phasecounterselect[2] => ~NO_FANOUT~
+phasecounterselect[3] => ~NO_FANOUT~
+phaseupdown => ~NO_FANOUT~
+phasestep => ~NO_FANOUT~
+configupdate => ~NO_FANOUT~
+fbmimicbidir <> <GND>
+
+
+|DE1_system|uart2bus_top:comb_54
 clock => clock.IN2
 reset => reset.IN2
 ser_in => ser_in.IN1
@@ -233,7 +272,7 @@ int_rd_data[7] => int_rd_data[7].IN1
 int_gnt => int_gnt.IN1
 
 
-|DE1_system|uart2bus_top:comb_53|uart_top:uart1
+|DE1_system|uart2bus_top:comb_54|uart_top:uart1
 clock => clock.IN3
 reset => reset.IN3
 ser_in => ser_in.IN1
@@ -276,7 +315,7 @@ baud_limit[14] => baud_limit[14].IN1
 baud_limit[15] => baud_limit[15].IN1
 
 
-|DE1_system|uart2bus_top:comb_53|uart_top:uart1|baud_gen:baud_gen_1
+|DE1_system|uart2bus_top:comb_54|uart_top:uart1|baud_gen:baud_gen_1
 clock => ce_16~reg0.CLK
 clock => counter[0].CLK
 clock => counter[1].CLK
@@ -357,7 +396,7 @@ baud_limit[15] => LessThan0.IN1
 baud_limit[15] => Add0.IN1
 
 
-|DE1_system|uart2bus_top:comb_53|uart_top:uart1|uart_rx:uart_rx_1
+|DE1_system|uart2bus_top:comb_54|uart_top:uart1|uart_rx:uart_rx_1
 clock => new_rx_data~reg0.CLK
 clock => rx_data[0]~reg0.CLK
 clock => rx_data[1]~reg0.CLK
@@ -423,7 +462,7 @@ ce_16 => count16[0].ENA
 ser_in => in_sync[0].DATAIN
 
 
-|DE1_system|uart2bus_top:comb_53|uart_top:uart1|uart_tx:uart_tx_1
+|DE1_system|uart2bus_top:comb_54|uart_top:uart1|uart_tx:uart_tx_1
 clock => ser_out~reg0.CLK
 clock => data_buf[0].CLK
 clock => data_buf[1].CLK
@@ -475,7 +514,7 @@ tx_data[7] => data_buf.DATAB
 new_tx_data => always1.IN1
 
 
-|DE1_system|uart2bus_top:comb_53|uart_parser:uart_parser1
+|DE1_system|uart2bus_top:comb_54|uart_parser:uart_parser1
 clock => s_tx_busy.CLK
 clock => new_tx_data~reg0.CLK
 clock => tx_data[0]~reg0.CLK

@@ -33,8 +33,11 @@ input			int_gnt;		// bus access grant signal
 // 115200 @ 50 `define D_BAUD_FREQ 12'd576
 //`define D_BAUD_LIMIT 16'd15049
 
-`define D_BAUD_FREQ 12'd2304
-`define D_BAUD_LIMIT 16'd13321
+//`define D_BAUD_FREQ 12'd2304
+//`define D_BAUD_LIMIT 16'd13321
+
+`define D_BAUD_FREQ 12'd1536
+`define D_BAUD_LIMIT 16'd14089
 
 // baud rate generator parameters for 115200 baud on 44MHz clock 
 // `define D_BAUD_FREQ			12'd23
