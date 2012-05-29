@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="DE1_system">
+		<CBX_INST_ENTRY INSTANCE_NAME="|DE1_system|bram_tdp:u10|altsyncram:mem[0][7]__1" CBX_FILE_NAME="altsyncram_41d1.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|DE1_system|bram_tdp:u10|altsyncram:mem[0][7]__2" CBX_FILE_NAME="altsyncram_41d1.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|DE1_system|bram_tdp:u10|altsyncram:mem[0][7]__3" CBX_FILE_NAME="altsyncram_41d1.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|DE1_system|bram_tdp:u10|altsyncram:mem_rtl_0" CBX_FILE_NAME="altsyncram_utg1.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

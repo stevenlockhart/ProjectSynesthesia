@@ -1,0 +1,93 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow Model Setup 'led_serializer:ul0|state.S0'
+Slack : -2.242
+TNS   : -2.242
+
+Type  : Slow Model Setup 'CLOCK_50'
+Slack : 0.854
+TNS   : 0.000
+
+Type  : Slow Model Setup 'upll|altpll_component|pll|clk[0]'
+Slack : 3.333
+TNS   : 0.000
+
+Type  : Slow Model Hold 'CLOCK_50'
+Slack : -1.846
+TNS   : -31.069
+
+Type  : Slow Model Hold 'upll|altpll_component|pll|clk[0]'
+Slack : 0.391
+TNS   : 0.000
+
+Type  : Slow Model Hold 'led_serializer:ul0|state.S0'
+Slack : 2.260
+TNS   : 0.000
+
+Type  : Slow Model Recovery 'CLOCK_50'
+Slack : 18.003
+TNS   : 0.000
+
+Type  : Slow Model Removal 'CLOCK_50'
+Slack : 1.254
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'led_serializer:ul0|state.S0'
+Slack : 0.500
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'upll|altpll_component|pll|clk[0]'
+Slack : 2.873
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'CLOCK_50'
+Slack : 7.620
+TNS   : 0.000
+
+Type  : Fast Model Setup 'led_serializer:ul0|state.S0'
+Slack : -0.742
+TNS   : -0.742
+
+Type  : Fast Model Setup 'CLOCK_50'
+Slack : 1.234
+TNS   : 0.000
+
+Type  : Fast Model Setup 'upll|altpll_component|pll|clk[0]'
+Slack : 7.031
+TNS   : 0.000
+
+Type  : Fast Model Hold 'CLOCK_50'
+Slack : -1.466
+TNS   : -36.126
+
+Type  : Fast Model Hold 'upll|altpll_component|pll|clk[0]'
+Slack : 0.215
+TNS   : 0.000
+
+Type  : Fast Model Hold 'led_serializer:ul0|state.S0'
+Slack : 1.340
+TNS   : 0.000
+
+Type  : Fast Model Recovery 'CLOCK_50'
+Slack : 18.628
+TNS   : 0.000
+
+Type  : Fast Model Removal 'CLOCK_50'
+Slack : 0.688
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'led_serializer:ul0|state.S0'
+Slack : 0.500
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'upll|altpll_component|pll|clk[0]'
+Slack : 2.873
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'CLOCK_50'
+Slack : 7.620
+TNS   : 0.000
+
+------------------------------------------------------------
