@@ -9,3 +9,7 @@ OBJ = led.o main.o
 
 led: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS)
+
+clean: $(DEPS)
+	rm *.o led
+
