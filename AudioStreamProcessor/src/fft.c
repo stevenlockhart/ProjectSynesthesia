@@ -32,15 +32,16 @@ int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
   spec->lo = 0; spec->md = 0; spec->hi = 0;
   for (n = 0; n < frame_buffer->num_elements; n++) {
     freq = (double)frame_buffer->num_elements / (n + 1);
-    amp = (double)*(*(fftw_complex *)out[n]); // Yikes
+    amp = 50; // (double)*(*(fftw_complex *)out[n]); // Yikes
     // TEMP
     //if (amp > 0) printf("Histogram Bar: {%8f, %8f}\n", freq, amp);
     
     // Build spectrum ranges
     if (amp > 0) {
-      if (freq < 1000) {
+      //if (freq < 1000) {
         spec->lo += amp;
-      } else if (1000 <= freq && freq < 10000) {
+      //} else 
+      if (1000 <= freq && freq < 10000) {
         spec->md += amp;
       } else {
         spec->hi += amp;

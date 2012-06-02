@@ -19,8 +19,8 @@ int calculate_colors(spectrum *spec, color_array *c) {
     c->colors[n].b = (int)(spec->hi / 10000000.0 * 255);
 
     // TEMP
-    printf("Color: {%d, %d, %d}\n",
-           c->colors[n].r, c->colors[n].g, c->colors[n].b);
+    //printf("Color: {%d, %d, %d}\n",
+    //       c->colors[n].r, c->colors[n].g, c->colors[n].b);
   }
 
   return n;

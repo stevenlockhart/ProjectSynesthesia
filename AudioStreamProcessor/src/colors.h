@@ -9,7 +9,7 @@
  * amplitude of the audio sample.
  */
 
-#define NUM_LEDS 60
+#define NUM_LEDS 30
 
 #include <stdint.h>
 
