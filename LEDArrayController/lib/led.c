@@ -9,6 +9,9 @@
 #include <errno.h>
 #include "led.h"
 
+// TODO: (?) double buffer colors and make UPDATE strand only update changed values, piecewise
+
+
 STRAND * build_strand(int leds, char* device, int baud) {   // Num LEDs, Device node, Baud
 	int i;
 	STRAND * t = malloc(sizeof(struct strand_struct));
