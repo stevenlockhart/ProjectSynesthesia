@@ -8,8 +8,27 @@
 
 #include "fft.h"
 
+void bin_fft_term(double freq, double amp, spectrum_t spec) {
+  unsigned int cur_band = 0;
+  double cur_semitone = C0;
+  while (cur_semitone < C8) {
+    if ((freq > (cur_semitone * (1 - BAND_RAD))) &&
+        (freq <= (cur_semitone * (1 + BAND_RAD)))) {
+      spec[cur_band] += amp;
+      
+      //TEMP
+      /*printf("Freq %f binned to bin %d around semitone %f\n",
+             freq, cur_band, cur_semitone);*/
+
+      break;
+    }
+    cur_semitone *= TONE_MUL;
+    cur_band++;
+  } 
+}
+
 int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
-                       spectrum *spec) {
+                       spectrum_t spec) {
 
   fftw_complex *out = (fftw_complex *)fftw_malloc(sizeof(fftw_complex)
                                                   * ((n_frames / 2) + 1));
@@ -25,35 +44,23 @@ int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
   fftw_execute(plan);
 
   // Build spectrum histogram
-  // TODO
   double freq;
   double amp;
   unsigned int n;
-  spec->lo = 0; spec->md = 0; spec->hi = 0;
+
+  for (n = 0; n < NUM_BANDS; n++) spec[n] = 0;
+
   for (n = 0; n < frame_buffer->num_elements; n++) {
     freq = (double)frame_buffer->num_elements / (n + 1);
     amp = (double)*(*(fftw_complex *)out[n]); // Yikes
-    // TEMP
-    //if (amp > 0) printf("Histogram Bar: {%8f, %8f}\n", freq, amp);
-    
-    // Build spectrum ranges
-    if (amp > 0) {
-      if (freq < 1000) {
-        spec->lo += amp;
-      } else if (1000 <= freq && freq < 10000) {
-        spec->md += amp;
-      } else {
-        spec->hi += amp;
-      }
-    }
+
+    if (amp > 0) bin_fft_term(freq, amp, spec);
   }
 
-  // TEMP
-  printf("Spectrum: {%8f, %8f, %8f}\n",
-         spec->lo, spec->md, spec->hi);
+  /* TEMP
+  printf("Spectrum: {");
+  for (n = 0; n < NUM_BANDS; n++) printf("%8f", spec[n]);
+  printf("}\n");*/
 
-  // Update spectrum
-  // TODO
-
-  return n;
+  return frame_buffer->num_elements;
 }

@@ -184,19 +184,19 @@ int main(int argc, char **argv) {
   /* Set up internal data structures */
   fb_t frame_buffer = fb_create(PACKET_SIZE);
 
-  spectrum *spec = (spectrum *)malloc(sizeof(spectrum));
-  spec->lo = 0; spec->md = 0; spec->hi = 0;
+  spectrum_t spec = (spectrum_t)malloc(sizeof(double) * NUM_BANDS);
+  int b; for (b = 0; b < NUM_BANDS; b++) spec[b] = 0;
 
   color_array *c = (color_array *)malloc(sizeof(color_array));
   memset(c, 0, sizeof(c));
 
-  STRAND *strand;
+  /*STRAND *strand;
   strand = build_strand(NUM_LEDS, "/dev/ttyUSB0", 115200);
   strand_info(strand);
   if (strand == NULL){
      fprintf(stderr, "WHAT THE FUCK?!\n");
      return -1;
-  }
+  }*/
   
   /* Mainloop */
   while (1) {
@@ -246,17 +246,15 @@ int main(int argc, char **argv) {
     }
 
     // Send Color values
-    strand->colors[0] = 50;
-    int i;
-    for (i = 0; i < NUM_LEDS; i++) {
-      //strand->colors[i * 3] = c->colors[i].r;
+    /*int i; for (i = 0; i < NUM_LEDS; i++) {
+      strand->colors[(i * 3)] = c->colors[i].r;
       strand->colors[(i * 3) + 1] = c->colors[i].g;
       strand->colors[(i * 3) + 2] = c->colors[i].b;
     }
-    update_strand(strand);
+    update_strand(strand);*/
   }
  
   snd_pcm_close(pcm_handle);
-  free_strand(strand);
+  //free_strand(strand);
   exit(0);
 }

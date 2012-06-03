@@ -9,13 +9,13 @@
  * amplitude of the audio sample.
  */
 
-#define NUM_LEDS 30
+#define NUM_LEDS 60
 
 #include <stdint.h>
 
 #include "fft.h"
 
-typedef struct {
+typedef struct color {
   uint8_t r;
   uint8_t g;
   uint8_t b;
@@ -27,4 +27,4 @@ typedef struct {
 } color_array;
 typedef struct color_array *colors_t;
 
-int calculate_colors(spectrum *spec, color_array *c);
+int calculate_colors(spectrum_t spec, color_array *c);
