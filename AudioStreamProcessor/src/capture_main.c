@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   /* Set up ALSA Stream */
   int err;
   snd_pcm_t *pcm_handle;
-  char *pcm_name = strdup("hw:0,0"); // TEMP: Hardcoded
+  char *pcm_name = strdup("hw:1,0"); // TEMP: Hardcoded
   snd_pcm_hw_params_t *hw_params;
   snd_pcm_sw_params_t *sw_params;
 
@@ -190,9 +190,9 @@ int main(int argc, char **argv) {
   color_array *c = (color_array *)malloc(sizeof(color_array));
   memset(c, 0, sizeof(c));
 
-  STRAND *strand;
+  //STRAND *strand;
   //strand_info(strand);
-  strand = build_strand(NUM_LEDS, "/dev/ttyUSB0", 115200);
+  //strand = build_strand(NUM_LEDS, "/dev/ttyUSB0", 115200);
   //if (strand == NULL){
   //   fprintf(stderr, "WHAT THE FUCK?!\n");
   //   return -1;
@@ -245,17 +245,17 @@ int main(int argc, char **argv) {
     }
 
     // Send Color values
-    //strand->colors[0] = 50;
+    /*strand->colors[0] = 50;
     int i;
     for (i = 0; i < NUM_LEDS; i++) {
       //strand->colors[i * 3] = c->colors[i].r;
       strand->colors[(i * 3) + 1] = c->colors[i].g;
       strand->colors[(i * 3) + 2] = c->colors[i].b;
     }
-    update_strand(strand);
+    update_strand(strand);*/
   }
  
   snd_pcm_close(pcm_handle);
-  free_strand(strand);
+  //free_strand(strand);
   exit(0);
 }
