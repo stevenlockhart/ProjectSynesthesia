@@ -190,13 +190,14 @@ int main(int argc, char **argv) {
   color_array *c = (color_array *)malloc(sizeof(color_array));
   memset(c, 0, sizeof(c));
 
-  //STRAND *strand;
-  //strand_info(strand);
-  //strand = build_strand(NUM_LEDS, "/dev/ttyUSB0", 115200);
-  //if (strand == NULL){
-  //   fprintf(stderr, "WHAT THE FUCK?!\n");
-  //   return -1;
-  //}
+  STRAND *strand;
+  strand = build_strand(NUM_LEDS, "/dev/ttyUSB0", 115200);
+  strand_info(strand);
+  if (strand == NULL){
+     fprintf(stderr, "WHAT THE FUCK?!\n");
+     return -1;
+  }
+  
   /* Mainloop */
   while (1) {
     int frames_available;
@@ -245,17 +246,17 @@ int main(int argc, char **argv) {
     }
 
     // Send Color values
-    /*strand->colors[0] = 50;
+    strand->colors[0] = 50;
     int i;
     for (i = 0; i < NUM_LEDS; i++) {
       //strand->colors[i * 3] = c->colors[i].r;
       strand->colors[(i * 3) + 1] = c->colors[i].g;
       strand->colors[(i * 3) + 2] = c->colors[i].b;
     }
-    update_strand(strand);*/
+    update_strand(strand);
   }
  
   snd_pcm_close(pcm_handle);
-  //free_strand(strand);
+  free_strand(strand);
   exit(0);
 }
