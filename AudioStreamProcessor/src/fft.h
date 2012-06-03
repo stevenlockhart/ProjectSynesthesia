@@ -12,7 +12,8 @@
 
 #define C0 16.35
 #define C8 4186.01
-#define NUM_BANDS 96
+#define NUM_OCTAVES 8
+#define NUM_BANDS (NUM_SEMITONES * NUM_OCTAVES)
 #define TONE_MUL 1.05946414 // Multiply a frequency by this to increase by one
                             // semitone
 #define BAND_RAD ((TONE_MUL - 1) / 2) // Multiple a semitone by this to get
@@ -20,6 +21,7 @@
                                       // corresponding spectrum band
 
 #include "frame_buffer.h"
+#include "music.h"
 
 typedef double *spectrum_t;
 

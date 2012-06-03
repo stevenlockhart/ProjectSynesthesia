@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall -g
 BIN=../bin/
 EXECUTABLES=$(BIN)audio_stream_processor
-SOURCES=capture_main.c colors.c frame_buffer.c fft.c led.c
+SOURCES=capture_main.c colors.c frame_buffer.c fft.c led.c music.c
 OBJECTS=$(SOURCES:.c=.o)
 LIBS=-lasound -L:/usr/local/lib -lfftw3 -lm
 #TESTS=$(BIN)caching_queue_test
