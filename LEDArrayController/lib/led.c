@@ -11,6 +11,22 @@
 
 // TODO: (?) double buffer colors and make UPDATE strand only update changed values, piecewise
 
+static const char _qra[] =  {0x00,
+                            0xc0,
+                            0xe0,
+                            0x50,
+                            0xf0,
+                            0x04,
+                            0x44,
+                            0xcc,
+                            0x22,
+                            0x1a,
+                            0x06,
+                            0xc1,
+                            0x05,
+                            0x03,
+                            0xdd,
+                            0xff};
 
 STRAND * build_strand(int leds, char* device, int baud) {   // Num LEDs, Device node, Baud
 	int i;
@@ -66,6 +82,13 @@ int strand_info(STRAND * led) {
 	printf("Num. LEDs: %d\n", led->leds);
 }
 
+unsigned char _translate(unsigned char in) {
+    unsigned char out;
+    out = _qra[in/16]; 
+    //printf("\tDID %x\n",out);
+    return out;
+}
+
 int update_strand(STRAND * led) {
     int fd = led->fd;
     unsigned int numdat = led->leds * 3;
@@ -93,7 +116,7 @@ int update_strand(STRAND * led) {
         _p(fd,low);
         _p(fd,lbyte);        
         for (j = 0 ; j < len; j++) {
-            _p(fd,led->colors[i]);
+            _p(fd,_translate(led->colors[i]));
             i++;
         }
     }

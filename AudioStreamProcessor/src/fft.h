@@ -11,10 +11,10 @@
 #define FFT_H
 
 #define PACKET_SIZE 20480
-#define WINDOW_RATIO 50
-#define MAX_FREQ PACKET_SIZE
+#define WINDOW_RATIO 20
+#define MAX_FREQ (PACKET_SIZE / 4)
 #define MIN_FREQ 20
-#define NUM_BANDS NUM_LEDS
+#define NUM_BANDS (NUM_LEDS / 2)
 #define BAND_RATIO pow((MAX_FREQ / MIN_FREQ), (1.0 / NUM_BANDS))
 
 #include <math.h>
@@ -23,6 +23,7 @@
 #include "frame_buffer.h"
 
 typedef double *spectrum_t;
+typedef double **spec_slope_history_t;
 
 /*
  * Calculate Spectrum
@@ -34,7 +35,8 @@ typedef double *spectrum_t;
  * failure.
  */
 int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
-                       spectrum_t spec);
+                       spectrum_t spec, spec_slope_history_t spec_hist,
+                       unsigned int i);
 
 /*
  * Bin FFT Term

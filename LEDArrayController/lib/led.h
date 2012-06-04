@@ -2,6 +2,8 @@
 
 #define PACKETSZ 256            // Packet size for binary
 #define COMMAND 32              // Command byte (see verilog reference for Uart2Bus binary mode)
+
+#define QUANTSZ 16              // Quantize to 16
 struct strand_struct {
 	unsigned int leds;          // Number of RGB LEDs
 	unsigned char *device;      // LED serial device (HINT: For the nice FTDI, "/dev/tty.usbserial-FTELSJ0N")

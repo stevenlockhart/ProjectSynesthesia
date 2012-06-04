@@ -12,24 +12,31 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-#define NUM_LEDS 30
+#define NUM_LEDS 60
+#define NUM_OLD_VALS 4
 
 #include <stdint.h>
 
 #include "fft.h"
 
-typedef struct color {
+struct color {
   uint8_t r;
   uint8_t g;
   uint8_t b;
-} color;
-typedef struct color *color_t;
+};
+struct color_sum {
+  uint32_t r;
+  uint32_t g;
+  uint32_t b;
+};
+typedef struct color *colors_t;
 
-typedef struct {
+/*typedef struct {
   color colors[NUM_LEDS];
 } color_array;
-typedef struct color_array *colors_t;
+typedef struct color_array *colors_t;*/
+typedef colors_t *color_history_t;
 
-//int calculate_colors(spectrum_t spec, color_array *c);
+//int calculate_colors(spectrum_t spec, color_history_t c, unsigned int i);
 
 #endif

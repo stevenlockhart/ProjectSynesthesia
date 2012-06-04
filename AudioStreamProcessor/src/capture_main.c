@@ -11,7 +11,7 @@
  */
 
 //#define PACKET_SIZE 20480
-//#define WINDOW_RATIO 10
+//#define WINDOW_RATIO 20
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -187,8 +187,18 @@ int main(int argc, char **argv) {
   spectrum_t spec = (spectrum_t)malloc(sizeof(double) * NUM_BANDS);
   int b; for (b = 0; b < NUM_BANDS; b++) spec[b] = 0;
 
-  color_array *c = (color_array *)malloc(sizeof(color_array));
-  memset(c, 0, sizeof(c));
+  spec_slope_history_t spec_hist =
+      (spec_slope_history_t)malloc(sizeof(double *) * NUM_OLD_VALS);
+  for (b = 0; b < NUM_OLD_VALS; b++) {
+    spec_hist[b] = (double *)malloc(sizeof(double) * NUM_BANDS);
+    memset(spec_hist[b], 0, sizeof(double) * NUM_BANDS);
+  }
+
+  color_history_t c = (color_history_t)malloc(sizeof(colors_t) * NUM_OLD_VALS);
+  for (b = 0; b < NUM_OLD_VALS; b++) {
+    c[b] = (colors_t)malloc(sizeof(struct color) * NUM_LEDS);
+    memset(c[b], 0, sizeof(struct color) * NUM_LEDS);
+  }
 
   STRAND *strand;
   strand = build_strand(NUM_LEDS, "/dev/ttyUSB0", 115200);
@@ -197,7 +207,9 @@ int main(int argc, char **argv) {
      fprintf(stderr, "WHAT THE FUCK?!\n");
      return -1;
   }
-  
+ 
+  unsigned int i = 0;
+
   /* Mainloop */
   while (1) {
     int frames_available;
@@ -233,25 +245,58 @@ int main(int argc, char **argv) {
 
     // Calculate spectrum
     if (calculate_spectrum(fb_num_elements(frame_buffer), frame_buffer,
-                           spec) !=
+                           spec, spec_hist, i) !=
         fb_num_elements(frame_buffer)) {
       fprintf(stderr, "Calculate spectrum failed\n");
       break;
     }
 
     // Calculate color values
-    if (calculate_colors(spec, c) != NUM_LEDS) {
+    if (calculate_colors(spec, spec_hist, c, i) != NUM_LEDS) {
       fprintf(stderr, "Update colors failed\n");
       break;
     }
 
     // Send Color values
-    int i; for (i = 0; i < NUM_LEDS; i++) {
-      strand->colors[(i * 3)] = c->colors[i].r;
-      strand->colors[(i * 3) + 1] = c->colors[i].g;
-      strand->colors[(i * 3) + 2] = c->colors[i].b;
+    struct color_sum avgs[NUM_LEDS];
+    int l;  
+    for (l = 0; l < NUM_LEDS; l++) {
+      avgs[l].r = 0;  avgs[l].g = 0;  avgs[l].b = 0;
+    }
+
+    int v;
+    for (l = 0; l < NUM_LEDS; l++) {
+      for (v = 0; v < NUM_OLD_VALS; v++) {
+        avgs[l].r += c[v][l].r;  avgs[l].g += c[v][l].g;  avgs[l].b += c[v][l].b;
+      }
+      avgs[l].r /= NUM_OLD_VALS;
+      avgs[l].g /= NUM_OLD_VALS;
+      avgs[l].b /= NUM_OLD_VALS;
+    }
+
+    for (l = 0; l < (NUM_LEDS / 2); l++) {
+      strand->colors[90 - (l * 3)]     = avgs[l].b;
+      strand->colors[90 - (l * 3) + 1] = avgs[l].g;
+      strand->colors[90 - (l * 3) + 2] = avgs[l].r;
+      strand->colors[90 + (l * 3)]     = avgs[l].r;
+      strand->colors[90 + (l * 3) + 1] = avgs[l].g;
+      strand->colors[90 + (l * 3) + 2] = avgs[l].b;
     }
     update_strand(strand);
+
+    /*printf("i = %d\n", i);
+    printf("{");
+    for (l = 0; l < NUM_LEDS; l++) {    
+      printf("{%d, %d, %d}, ", c[i][l].r, c[i][l].g, c[i][l].b);
+    }
+    printf("}\n");*/
+
+    /*printf("Color: {%d, %d, %d}, i = %d\n", 
+            strand->colors[0], strand->colors[1], strand->colors[2], i);*/
+
+    i = (i + 1) % NUM_OLD_VALS;
+
+    //sleep(1);
   }
  
   snd_pcm_close(pcm_handle);
