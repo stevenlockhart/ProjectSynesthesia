@@ -13,7 +13,7 @@
 #define COLORS_H
 
 #define NUM_LEDS 60
-#define NUM_OLD_VALS 4
+#define NUM_OLD_VALS 6
 
 #include <stdint.h>
 

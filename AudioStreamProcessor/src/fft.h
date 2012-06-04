@@ -11,7 +11,7 @@
 #define FFT_H
 
 #define PACKET_SIZE 20480
-#define WINDOW_RATIO 20
+#define WINDOW_RATIO 32
 #define MAX_FREQ (PACKET_SIZE / 4)
 #define MIN_FREQ 20
 #define NUM_BANDS (NUM_LEDS / 2)

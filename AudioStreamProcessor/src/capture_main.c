@@ -275,9 +275,9 @@ int main(int argc, char **argv) {
     }
 
     for (l = 0; l < (NUM_LEDS / 2); l++) {
-      strand->colors[90 - (l * 3)]     = avgs[l].b;
+      strand->colors[90 - (l * 3)]     = avgs[l].r;
       strand->colors[90 - (l * 3) + 1] = avgs[l].g;
-      strand->colors[90 - (l * 3) + 2] = avgs[l].r;
+      strand->colors[90 - (l * 3) + 2] = avgs[l].b;
       strand->colors[90 + (l * 3)]     = avgs[l].r;
       strand->colors[90 + (l * 3) + 1] = avgs[l].g;
       strand->colors[90 + (l * 3) + 2] = avgs[l].b;
