@@ -10,15 +10,16 @@
 #ifndef FFT_H
 #define FFT_H
 
-#define C0 16.35
-#define C8 4186.01
-#define NUM_BANDS 96
-#define TONE_MUL 1.05946414 // Multiply a frequency by this to increase by one
-                            // semitone
-#define BAND_RAD ((TONE_MUL - 1) / 2) // Multiple a semitone by this to get
-                                      // the half of the width of the
-                                      // corresponding spectrum band
+#define PACKET_SIZE 20480
+#define WINDOW_RATIO 50
+#define MAX_FREQ PACKET_SIZE
+#define MIN_FREQ 20
+#define NUM_BANDS NUM_LEDS
+#define BAND_RATIO pow((MAX_FREQ / MIN_FREQ), (1.0 / NUM_BANDS))
 
+#include <math.h>
+
+#include "colors.h"
 #include "frame_buffer.h"
 
 typedef double *spectrum_t;

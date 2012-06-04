@@ -35,24 +35,37 @@ void spectrum_to_rgb(int spec_val, color_t c) {
 }
 
 int calculate_colors(spectrum_t spec, color_array *c) {
-  // Shift colors
-  int n; for (n = NUM_LEDS - 1; n > 0; n--) {
-    c->colors[n].r = c->colors[n - 1].r; 
-    c->colors[n].g = c->colors[n - 1].g; 
-    c->colors[n].b = c->colors[n - 1].b; 
+  // Calculate maximum amplitude
+  double max_band_amp = 0;
+  unsigned int cur_band;
+  for (cur_band = 0; cur_band < NUM_BANDS; cur_band++) {
+    if (spec[cur_band] > max_band_amp) {
+      max_band_amp = spec[cur_band];
+    }
   }
 
-  // Calculate new color
-  int color_val = calculate_tonality(spec);
-  spectrum_to_rgb(color_val, &(c->colors[0]));
+  // Calculate colors
   double amp_mod = calculate_amp(spec);
-  c->colors[0].r *= amp_mod; 
-  c->colors[0].g *= amp_mod; 
-  c->colors[0].b *= amp_mod; 
+ 
+  color_array *new = (color_array *)malloc(sizeof(color_array));
+  
+  for (cur_band = 0; cur_band < NUM_BANDS; cur_band++) {
+    unsigned int amp = (unsigned int)((spec[cur_band] / max_band_amp) * 255);
+    new->colors[cur_band].r = amp; //* amp * amp * amp_mod;
+    new->colors[cur_band].g = amp; //* amp * amp * amp_mod;
+    new->colors[cur_band].b = amp; //* amp * amp * amp_mod;
+
+    c->colors[cur_band].r =
+        ((c->colors[cur_band].r * 9) + new->colors[cur_band].r) / 10;
+    c->colors[cur_band].g =
+        ((c->colors[cur_band].g * 9) + new->colors[cur_band].g) / 10;
+    c->colors[cur_band].b =
+        ((c->colors[cur_band].b * 9) + new->colors[cur_band].b) / 10;
+ }
 
   // TEMP
-  printf("AmpMod = %f\tColor = {%d, %d, %d}\n", amp_mod,
-         c->colors[0].r, c->colors[0].g, c->colors[0].b);
+  printf("Color = {%d, %d, %d}\n",
+         c->colors[15].r, c->colors[15].g, c->colors[15].b);
 
   return NUM_LEDS;
 }

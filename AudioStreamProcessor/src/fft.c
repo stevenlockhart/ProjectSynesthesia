@@ -10,19 +10,20 @@
 
 void bin_fft_term(double freq, double amp, spectrum_t spec) {
   unsigned int cur_band = 0;
-  double cur_semitone = C0;
-  while (cur_semitone < C8) {
-    if ((freq > (cur_semitone * (1 - BAND_RAD))) &&
-        (freq <= (cur_semitone * (1 + BAND_RAD)))) {
+  double cur_band_min_freq = MIN_FREQ;
+  double cur_band_max_freq = MIN_FREQ * BAND_RATIO;
+  
+  while (cur_band < 30) {
+    if ((freq > cur_band_min_freq) && (freq <= cur_band_max_freq)) {
       spec[cur_band] += amp;
-      
+   
       //TEMP
-      /*printf("Freq %f binned to bin %d around semitone %f\n",
-             freq, cur_band, cur_semitone);*/
-
+      //printf("Binning freq=%f with amp=%f to bin#%d\n", freq, amp, cur_band);
+   
       break;
     }
-    cur_semitone *= TONE_MUL;
+    cur_band_min_freq = cur_band_max_freq;
+    cur_band_max_freq *= BAND_RATIO;
     cur_band++;
   } 
 }
@@ -37,6 +38,7 @@ int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
   in = fb_todoubles(frame_buffer);
 
   // Create FFTW plan
+  printf("\t\t%d\t\t%d\n", fb_num_elements(frame_buffer), (n_frames / 2) + 1);
   fftw_plan plan = fftw_plan_dft_r2c_1d(fb_num_elements(frame_buffer), in, out,
                                         FFTW_ESTIMATE);
 

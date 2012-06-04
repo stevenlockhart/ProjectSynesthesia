@@ -10,8 +10,8 @@
  * Array
  */
 
-#define PACKET_SIZE 20480
-#define WINDOW_RATIO 10
+//#define PACKET_SIZE 20480
+//#define WINDOW_RATIO 10
 
 #include <stdio.h>
 #include <stdlib.h>
