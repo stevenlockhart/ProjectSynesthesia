@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include "colors.h"
  
@@ -62,27 +63,41 @@ int calculate_colors(spectrum_t spec, spec_slope_history_t spec_hist,
   }
 
   // Calculate colors
+  struct color clrs[NUM_BANDS];
+  memset(clrs, 0, sizeof(struct color) * NUM_BANDS);
   for (cur_band = 0; cur_band < NUM_BANDS; cur_band++) {
     // Calculate color value
     double color_val = 0;
     int v;
-    for (v = 0; v < NUM_OLD_VALS - 4; v++) {
+    for (v = 0; v < NUM_OLD_VALS -1; v++) {
       double val = spec_hist[v][cur_band] - spec_hist[v + 1][cur_band];
       if (val < 0) val *= -1;
       color_val += val;
     }
     color_val /= NUM_OLD_VALS;
-    color_val = 1.0 - ((color_val / (max_color_mag * 0.8)) / 0.2);
+    color_val = 1.0 - (color_val / (max_color_mag * 0.1));
+    if (color_val < 0) color_val = 0;
     printf("color_val = %f\n", color_val);
     spectrum_to_rgb((color_val * 360),
-                    &(c[i][cur_band]));
+                    &(clrs[cur_band]));
 
     // Apply intensity modulation
     double amp = (spec[cur_band] / max_band_amp);
-    c[i][cur_band].r = (uint8_t)(c[i][cur_band].r * amp);
-    c[i][cur_band].g = (uint8_t)(c[i][cur_band].g * amp);
-    c[i][cur_band].b = (uint8_t)(c[i][cur_band].b * amp);
+    c[i][cur_band].r = (uint8_t)(clrs[cur_band].r * amp);
+    c[i][cur_band].g = (uint8_t)(clrs[cur_band].g * amp);
+    c[i][cur_band].b = (uint8_t)(clrs[cur_band].b * amp);
   }
+/*
+  c[i][0].r = clrs[0].r;  c[i][0].g = clrs[0].g;  c[i][0].b = clrs[0].b;
+  for (cur_band = 1; cur_band < NUM_BANDS - 1; cur_band++) {
+    int r = (clrs[i - 1].r + (4 * clrs[i].r) + clrs[i + 1].r) / 6;
+    int g = (clrs[i - 1].g + (4 * clrs[i].g) + clrs[i + 1].g) / 6;
+    int b = (clrs[i - 1].b + (4 * clrs[i].b) + clrs[i + 1].b) / 6;
+    c[i][cur_band].r = (uint8_t)r;
+    c[i][cur_band].g = (uint8_t)g;
+    c[i][cur_band].b = (uint8_t)b;
+  }*/
+  c[i][29].r = clrs[29].r;  c[i][29].g = clrs[29].g;  c[i][29].b = clrs[29].b;
 
   // TEMP
   //printf("Color = {%d, %d, %d}\n",

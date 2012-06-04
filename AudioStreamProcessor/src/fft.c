@@ -75,7 +75,9 @@ int calculate_spectrum(unsigned int n_frames, fb_t frame_buffer,
   //for (n = 0; n < NUM_BANDS; n++) printf("%8f, ", new_spec[n]);
   //printf("}\n");
 
+  fftw_free(out);
   free(new_spec);
+  free(in);
 
   return frame_buffer->num_elements;
 }
